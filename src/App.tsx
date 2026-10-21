@@ -15,14 +15,14 @@ const tabs: { id: TabId; icon: string }[] = [
   { id: 'scams', icon: '🚩' },
 ]
 
-type Route = TabId | 'glossary'
+type Route = TabId | 'glossary' | 'myths'
 
 /** Old links from before the redesign keep working. */
 const legacy: Record<string, Route> = { start: 'learn', jargon: 'glossary', account: 'home' }
 
 const fromHash = (): Route => {
   const h = window.location.hash.slice(1).split('/')[0]
-  if (h === 'glossary' || tabs.some((t) => t.id === h)) return h as Route
+  if (h === 'glossary' || h === 'myths' || tabs.some((t) => t.id === h)) return h as Route
   return legacy[h] ?? 'home'
 }
 
@@ -56,7 +56,7 @@ export default function App() {
   }, [])
 
   const showOnboarding = editing || (!profile && !skipped)
-  const tab: TabId = route === 'glossary' ? 'learn' : route
+  const tab: TabId = route === 'glossary' || route === 'myths' ? 'learn' : route
 
   const done = (p: Profile) => {
     setSaved(p)
@@ -74,7 +74,8 @@ export default function App() {
   let page
   if (showOnboarding) page = <Onboarding initial={profile} skipIntro={editing} onDone={done} onSkip={skip} />
   else if (route === 'home') page = <Home profile={profile} onEdit={() => setEditing(true)} />
-  else if (route === 'learn' || route === 'glossary') page = <Learn view={route === 'learn' ? 'lessons' : 'glossary'} lesson={lesson} key={lesson} />
+  else if (route === 'learn' || route === 'glossary' || route === 'myths')
+    page = <Learn view={route === 'learn' ? 'lessons' : route} lesson={lesson} key={lesson} />
   else if (route === 'ready') page = <Ready />
   else if (route === 'grow') page = <Calculator />
   else page = <Scams />

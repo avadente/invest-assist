@@ -148,3 +148,20 @@ describe('Growth calculator', () => {
     expect(screen.getByText('Why start now?')).toBeTruthy()
   })
 })
+
+describe('demo + myths', () => {
+  it('fills a sample plan in one tap', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: /Try a sample student/ }))
+    expect(screen.getByRole('heading', { name: 'My plan' })).toBeTruthy()
+    expect(document.querySelector('.share-preview')!.textContent).toContain('$25/month')
+  })
+
+  it('shows money myths from home', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Skip for now' }))
+    window.location.hash = 'myths'
+    fireEvent(window, new HashChangeEvent('hashchange'))
+    expect(screen.getByText('"Investing is just gambling."')).toBeTruthy()
+  })
+})

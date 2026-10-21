@@ -68,6 +68,12 @@ export const es: Content = {
     quizAlso: 'También vale la pena ver:',
     lessonsTab: 'Lecciones',
     glossaryTab: 'Glosario',
+    mythsTab: 'Mitos de casa',
+    mythsTitle: 'Mitos sobre el dinero que oímos en casa',
+    mythsLead: 'Cosas que muchos escuchamos al crecer. Cada una viene de experiencias reales. Aquí está lo que es cierto hoy y una forma de hablarlo con tu familia.',
+    mythLabel: 'Quizás has escuchado',
+    factLabel: 'Lo que es cierto',
+    familyLabel: 'Dilo en casa',
 
     jargonTitle: 'Glosario sin enredos',
     jargonLead: 'Palabras de dinero, explicadas como lo haría un amigo.',
@@ -90,6 +96,7 @@ export const es: Content = {
     introLead: '7 preguntas rápidas para que Invest-Assist te muestre los primeros pasos correctos. Toma unos 2 minutos y no hay respuestas incorrectas.',
     privacyNote: 'Tus respuestas se guardan solo en este navegador. Nunca nos llegan ni a nosotros ni a nadie más.',
     begin: '¡Vamos!',
+    tryDemo: 'Probar con un estudiante de ejemplo',
     skip: 'Saltar por ahora',
     back: 'Atrás',
     next: 'Siguiente',
@@ -266,6 +273,39 @@ export const es: Content = {
     { term: 'Beta', plain: 'Qué tanto suele moverse una acción comparada con todo el mercado. 1 = se mueve como el mercado. Más de 1 = movimientos más grandes. Menos de 1 = más tranquila.' },
     { term: 'Sector / industria', plain: 'El tipo de negocio de una empresa, como tecnología, salud o energía. Tener varios sectores es parte de diversificar.' },
     { term: 'Acción fraccionada (fractional share)', plain: 'Un pedazo de una acción. Te deja invertir una cantidad pequeña en cualquier acción, sin importar su precio.', example: '$10 de una acción de $200 = 0.05 acciones.' },
+  ],
+
+  myths: [
+    {
+      myth: '"Invertir es como apostar."',
+      fact: 'Un fondo indexado amplio tiene pedacitos de miles de empresas reales que generan ganancias reales. Los juegos de casino están hechos para que la casa gane en promedio. A lo largo de muchos años, la bolsa de EE. UU. ha crecido.',
+      family: '"No estoy apostando a una sola empresa. Tengo un poquito de miles de negocios por muchos años."',
+    },
+    {
+      myth: '"El efectivo en casa es más seguro que el banco."',
+      fact: 'El efectivo en casa se puede perder o te lo pueden robar, y cada año alcanza para menos por la inflación. El dinero en un banco asegurado por la FDIC o una cooperativa asegurada por la NCUA está protegido hasta $250,000. Algunos bancos y cooperativas aceptan ITIN o pasaporte en lugar de número de Seguro Social.',
+      family: '"La cuenta del banco está asegurada por el gobierno de EE. UU. Si el banco quiebra, el dinero sigue protegido."',
+    },
+    {
+      myth: '"Se necesita mucho dinero para empezar."',
+      fact: 'Muchas casas de corretaje no piden mínimo y venden acciones fraccionadas, así que con $5 o $10 puedes empezar. El tiempo importa más que la cantidad.',
+      family: '"Voy a empezar con $10 al mes. Las cantidades pequeñas crecen mucho con los años."',
+    },
+    {
+      myth: '"Invertir es para ricos, no para gente como nosotros."',
+      fact: 'Cuentas como la Roth IRA y el 401(k) se crearon para trabajadores comunes. Los jóvenes con ingresos bajos suelen ser los que más ganan, porque tienen más tiempo y pagan pocos impuestos ahora.',
+      family: '"Así es como los trabajadores comunes ahorran para el futuro. Empezar joven es nuestra ventaja."',
+    },
+    {
+      myth: '"Si la bolsa baja, lo pierdes todo."',
+      fact: 'Una bajada solo es una pérdida real si vendes. Los fondos amplios tienen miles de empresas, así que no llegan a cero como puede pasar con un solo negocio. La bolsa de EE. UU. se ha recuperado de todas las caídas pasadas hasta ahora, aunque a veces tardó varios años.',
+      family: '"Sube y baja, pero lo voy a dejar quieto mucho tiempo y no voy a vender cuando baje."',
+    },
+    {
+      myth: '"Las cuentas para la jubilación encierran tu dinero hasta que seas mayor."',
+      fact: 'Con una Roth IRA puedes sacar lo que aportaste (no las ganancias) en cualquier momento sin impuestos ni penalidad. Aun así, lo mejor es dejarlo crecer.',
+      family: '"Si hay una emergencia de verdad, el dinero que puse puede volver a salir."',
+    },
   ],
 
   readySteps: [
