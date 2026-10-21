@@ -139,7 +139,12 @@ export function Home(props: { profile: Profile | null; onEdit: () => void; onSta
             </div>
           ))}
         </dl>
-        <button className="btn ghost" onClick={props.onEdit}>{t.editAnswers}</button>
+        <div className="share-actions">
+          <button className="btn ghost" onClick={props.onEdit}>{t.editAnswers}</button>
+          <button className="btn ghost" onClick={() => {
+            if (window.confirm(c.ui.resetConfirm)) { setReadyDone([]); props.onStartOwn() }
+          }}>↺ {c.ui.resetPlan}</button>
+        </div>
       </details>
     </section>
   )

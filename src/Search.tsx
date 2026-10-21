@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+import { tabIcons } from './App'
 import { useLang } from './i18n'
+import type { TabId } from './content'
 
 /** Site-wide search over pages, lessons, dictionary terms and myths. */
 export function Search() {
@@ -13,7 +15,7 @@ export function Search() {
   }, [])
 
   const items = [
-    ...Object.entries(c.ui.tabs).map(([id, label]) => ({ label, text: label, href: `#${id}` })),
+    ...Object.entries(c.ui.tabs).map(([id, label]) => ({ label: `${tabIcons[id as TabId]} ${label}`, text: label, href: `#${id}` })),
     ...c.lessons.map((l) => ({ label: `📘 ${l.title}`, text: l.title + ' ' + l.body.join(' '), href: `#learn/${l.id}` })),
     ...c.glossary.map((t) => ({ label: `💬 ${t.term}`, text: t.term + ' ' + t.plain, href: '#glossary' })),
     ...c.myths.map((m) => ({ label: `🏡 ${m.myth}`, text: m.myth + ' ' + m.fact, href: '#myths' })),
