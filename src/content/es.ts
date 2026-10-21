@@ -2,7 +2,7 @@ import type { Content } from './types'
 
 export const es: Content = {
   ui: {
-    tagline: 'Lo básico de invertir para estudiantes de primera generación',
+    tagline: 'Lo básico de invertir para estudiantes.',
     langLabel: 'Idioma',
     tabs: {
       home: 'Mi plan',
@@ -33,7 +33,7 @@ export const es: Content = {
     readyTitle: '¿Ya puedo empezar a invertir?',
     readyLead: 'La mayoría de los expertos en finanzas recomiendan este orden. Marca lo que ya hiciste.',
     stepsDone: 'pasos completados',
-    nextStep: 'Tu siguiente paso: trabaja en',
+    nextStep: 'Tu siguiente paso:',
     allDone: 'Ya cubriste lo básico. Sigue invirtiendo de forma automática y déjalo crecer. 🎉',
 
     calcTitle: 'Calculadora de crecimiento',
@@ -51,6 +51,17 @@ export const es: Content = {
     legendIn: 'Lo que aportaste',
     legendGrowth: 'Crecimiento',
     chartLabel: (b) => `Gráfica: el saldo crece hasta ${b}`,
+    whyTitle: '¿Por qué empezar ya?',
+    waitCost: (w, later, lost) => `Si esperas ${w} año${w > 1 ? 's' : ''} para empezar (y terminas en la misma fecha), tendrías unos ${later}. Son ${lost} menos.`,
+    compareTitle: 'El mismo dinero, tres opciones',
+    cashLabel: 'Efectivo (sin intereses)',
+    savingsLabel: 'Cuenta de ahorros (alrededor de 1% al año)',
+    investLabel: (r) => `Invertido (alrededor de ${r}% al año)`,
+    crossover: (y) => `Para el año ${y}, el crecimiento ya sumó más de lo que tú aportaste. Tu dinero trabaja más que tú.`,
+    noCrossover: 'Déjalo más tiempo: el mayor crecimiento llega en los últimos años.',
+    perDay: (m, d) => `${m} al mes son unos ${d} al día.`,
+    multiplier: (x) => `Cada $1 que aportas crece a unos $${x}.`,
+    whyNote: 'Esto usa los números de arriba y supone un rendimiento promedio constante. Los mercados reales suben y bajan, así que no es una garantía.',
 
     quizBest: 'Un buen lugar para empezar',
     quizNext: 'Qué hacer ahora:',
@@ -84,6 +95,7 @@ export const es: Content = {
     next: 'Siguiente',
     finish: 'Ver mi plan',
     stepOf: (s, t) => `Pregunta ${s} de ${t}`,
+    clearHint: '¿Cambiaste de opinión? Toca tu respuesta otra vez para quitarla.',
     experienceQ: '¿Cuánto sabes sobre invertir?',
     experience: {
       new: { label: 'Esto es totalmente nuevo para mí', hint: 'Palabras como "acción" o "fondo indexado" son nuevas para mí.' },
@@ -136,6 +148,30 @@ export const es: Content = {
     answersBudget: 'Presupuesto mensual',
     noGoals: 'Ninguna',
     editAnswers: 'Editar mis respuestas',
+
+    planTitle: 'Tu plan paso a paso',
+    planLead: 'Hecho con tus respuestas. Marca los pasos a medida que avanzas. Se sincronizan con "¿Ya puedo invertir?".',
+    stepDone: 'Hecho',
+    stepNext: 'Lo siguiente',
+    learnHow: 'Aprende cómo',
+    stepNotes: {
+      needsIncome: 'Necesitas ingresos de un trabajo o de algo por tu cuenta para poner dinero en una Roth IRA. Regresa a este paso cuando los tengas.',
+      longTermOnly: 'Solo para dinero que no vas a necesitar en 5 años o más. El dinero que necesitas pronto, mejor en ahorros.',
+      startHere: 'Empieza aquí. Incluso $20 a la semana se juntan rápido.',
+    },
+    waitLine: (w, lost) => `Empezar ahora en lugar de esperar ${w} años podría significar unos ${lost} más.`,
+
+    summaryTitle: 'Tu plan en un vistazo',
+    summaryLead: 'Compártelo con alguien de confianza: un amigo, tu familia o un consejero. Esta vista previa es exactamente lo que se comparte.',
+    shareHeading: 'Mi plan de Invest-Assist',
+    shareCanInvest: 'Puedo invertir',
+    shareProgress: (d, t) => `${d} de ${t} pasos completados`,
+    shareCta: 'Haz tu propio plan gratis:',
+    share: 'Compartir',
+    download: 'Descargar imagen',
+    copy: 'Copiar texto',
+    copied: '¡Copiado!',
+    shareFailed: 'No se pudo compartir desde este navegador. Prueba con Copiar texto.',
   },
 
   lessons: [
@@ -233,14 +269,14 @@ export const es: Content = {
   ],
 
   readySteps: [
-    { id: 'budget', label: 'Sé más o menos cuánto dinero entra y sale cada mes', why: 'Solo puedes invertir dinero que no necesitas para tus cuentas.' },
-    { id: 'starter', label: 'Tengo un fondo de emergencia inicial ($500 a $1,000)', why: 'Así una cuenta inesperada no se convierte en deuda de tarjeta de crédito.' },
-    { id: 'highdebt', label: 'No tengo deudas de tarjeta de crédito u otras con más de 8% de interés', why: 'Pagar deudas con interés alto es una ganancia segura.' },
-    { id: 'match', label: 'Si mi trabajo ofrece aporte (match) al 401(k), aporto lo suficiente para recibirlo completo', why: 'El aporte del empleador suele ser una ganancia inmediata del 50% al 100%.' },
-    { id: 'full', label: 'Mi fondo de emergencia cubre unos 3 meses de gastos', why: 'Así puedes dejar tus inversiones en paz cuando la vida se complica.' },
-    { id: 'roth', label: 'Ya abrí una Roth IRA (o pienso abrirla pronto)', why: 'Crece libre de impuestos, y quienes empiezan joven son los que más ganan.' },
-    { id: 'fund', label: 'Escogí un fondo indexado amplio de bajo costo o un fondo con fecha objetivo', why: 'Sencillo, diversificado y barato. No hace falta escoger acciones.' },
-    { id: 'auto', label: 'Configuré una inversión automática cada mes', why: 'Al automatizarlo, nunca tienes que acordarte ni adivinar el mejor momento.' },
+    { id: 'budget', action: 'Saber más o menos cuánto dinero entra y sale cada mes', label: 'Sé más o menos cuánto dinero entra y sale cada mes', why: 'Solo puedes invertir dinero que no necesitas para tus cuentas.' },
+    { id: 'starter', action: 'Armar un fondo de emergencia inicial ($500 a $1,000)', label: 'Tengo un fondo de emergencia inicial ($500 a $1,000)', why: 'Así una cuenta inesperada no se convierte en deuda de tarjeta de crédito.' },
+    { id: 'highdebt', action: 'Pagar tarjetas de crédito y otras deudas con más de 8% de interés', label: 'No tengo deudas de tarjeta de crédito u otras con más de 8% de interés', why: 'Pagar deudas con interés alto es una ganancia segura.' },
+    { id: 'match', action: 'Aportar a tu 401(k) lo suficiente para recibir el aporte completo del empleador', label: 'Si mi trabajo ofrece aporte (match) al 401(k), aporto lo suficiente para recibirlo completo', why: 'El aporte del empleador suele ser una ganancia inmediata del 50% al 100%.' },
+    { id: 'full', action: 'Hacer crecer tu fondo de emergencia a unos 3 meses de gastos', label: 'Mi fondo de emergencia cubre unos 3 meses de gastos', why: 'Así puedes dejar tus inversiones en paz cuando la vida se complica.' },
+    { id: 'roth', action: 'Abrir una Roth IRA', label: 'Ya abrí una Roth IRA (o pienso abrirla pronto)', why: 'Crece libre de impuestos, y quienes empiezan joven son los que más ganan.' },
+    { id: 'fund', action: 'Escoger un fondo indexado amplio de bajo costo o un fondo con fecha objetivo', label: 'Escogí un fondo indexado amplio de bajo costo o un fondo con fecha objetivo', why: 'Sencillo, diversificado y barato. No hace falta escoger acciones.' },
+    { id: 'auto', action: 'Configurar una inversión automática cada mes', label: 'Configuré una inversión automática cada mes', why: 'Al automatizarlo, nunca tienes que acordarte ni adivinar el mejor momento.' },
   ],
 
   redFlags: [

@@ -1,12 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLang } from './i18n'
-import { formatMoney, projectGrowth } from './lib/growth'
+import { compareOptions, costOfWaiting, crossoverYear, formatMoney, perDay, projectGrowth } from './lib/growth'
 import { useStored } from './lib/useStored'
 
-export function StartHere() {
+export function StartHere({ lesson }: { lesson?: string }) {
   const { c: { ui, lessons } } = useLang()
   const [done, setDone] = useStored<string[]>('ia.lessons', [])
-  const [open, setOpen] = useState<string | null>(() => (lessons.find((l) => !done.includes(l.id)) ?? lessons[0]).id)
+  const [open, setOpen] = useState<string | null>(() =>
+    lessons.some((l) => l.id === lesson) ? lesson! : (lessons.find((l) => !done.includes(l.id)) ?? lessons[0]).id)
+  const openRef = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    if (lesson) openRef.current?.scrollIntoView?.({ block: 'start' })
+  }, [lesson])
 
   const toggleDone = (id: string) =>
     setDone((d) => (d.includes(id) ? d.filter((x) => x !== id) : [...d, id]))
@@ -21,7 +27,7 @@ export function StartHere() {
           const isOpen = open === l.id
           const isDone = done.includes(l.id)
           return (
-            <li key={l.id} className={`card lesson ${isDone ? 'done' : ''}`}>
+            <li key={l.id} ref={isOpen ? openRef : undefined} className={`card lesson ${isDone ? 'done' : ''}`}>
               <button
                 className="lesson-head"
                 aria-expanded={isOpen}
@@ -48,7 +54,7 @@ export function StartHere() {
   )
 }
 
-export function Learn({ view }: { view: 'lessons' | 'glossary' }) {
+export function Learn({ view, lesson }: { view: 'lessons' | 'glossary'; lesson?: string }) {
   const { c: { ui } } = useLang()
   return (
     <>
@@ -60,7 +66,7 @@ export function Learn({ view }: { view: 'lessons' | 'glossary' }) {
           💬 {ui.glossaryTab}
         </a>
       </nav>
-      {view === 'lessons' ? <StartHere /> : <Jargon />}
+      {view === 'lessons' ? <StartHere lesson={lesson} /> : <Jargon />}
     </>
   )
 }
@@ -81,7 +87,7 @@ export function Ready() {
       <div className="card callout">
         {nextStep ? (
           <>
-            <strong>{ui.nextStep}</strong> "{nextStep.label}"
+            <strong>{ui.nextStep}</strong> {nextStep.action}
             <div className="muted small">{nextStep.why}</div>
           </>
         ) : (
@@ -118,6 +124,11 @@ export function Calculator() {
   )
   const last = points[points.length - 1]
   const growth = last.balance - last.contributed
+  const input = { start, monthly, years, ratePct: rate }
+  const wait = costOfWaiting(input)
+  const options = compareOptions(input)
+  const cross = crossoverYear(points)
+  const multiplier = last.contributed > 0 ? (last.balance / last.contributed).toFixed(2) : null
 
   return (
     <section>
@@ -143,6 +154,37 @@ export function Calculator() {
             <span><i className="sw sw-grow" /> {ui.legendGrowth}</span>
           </div>
         </div>
+      </div>
+
+      <div className="card why">
+        <h3>{ui.whyTitle}</h3>
+        {wait.lost > 0 && (
+          <p className="why-big">
+            <span className="why-num">−{formatMoney(wait.lost)}</span>
+            <span>{ui.waitCost(wait.wait, formatMoney(wait.later), formatMoney(wait.lost))}</span>
+          </p>
+        )}
+        <h4>{ui.compareTitle}</h4>
+        <ul className="bars">
+          {([
+            [ui.cashLabel, options.cash, 'bar-cash'],
+            [ui.savingsLabel, options.savings, 'bar-save'],
+            [ui.investLabel(rate), options.invested, 'bar-invest'],
+          ] as const).map(([label, value, cls]) => (
+            <li key={cls}>
+              <div className="bar-row"><span>{label}</span><strong>{formatMoney(value)}</strong></div>
+              <div className="bar-track" aria-hidden>
+                <div className={cls} style={{ width: `${options.invested > 0 ? Math.max(2, (value / Math.max(options.invested, options.cash)) * 100) : 0}%` }} />
+              </div>
+            </li>
+          ))}
+        </ul>
+        <ul className="why-facts">
+          <li>{cross ? ui.crossover(cross) : ui.noCrossover}</li>
+          {monthly > 0 && <li>{ui.perDay(formatMoney(monthly), perDay(monthly).toLocaleString('en-US', { style: 'currency', currency: 'USD' }))}</li>}
+          {multiplier && rate > 0 && <li>{ui.multiplier(multiplier)}</li>}
+        </ul>
+        <p className="muted small">{ui.whyNote}</p>
       </div>
     </section>
   )
@@ -238,15 +280,20 @@ function Progress({ value, max, label }: { value: number; max: number; label: st
 function NumberField(props: {
   label: string; value: number; onChange: (n: number) => void; min: number; max: number; prefix?: string
 }) {
+  // Keep what the person typed as text, so an empty box stays empty instead of snapping back to "0".
+  const [text, setText] = useState(props.value ? String(props.value) : '')
   return (
     <label className="field">
       <span>{props.label}</span>
       <span className="with-prefix">
         {props.prefix && <span className="prefix">{props.prefix}</span>}
-        <input type="number" inputMode="decimal" min={props.min} max={props.max} value={props.value}
+        <input type="number" inputMode="decimal" min={props.min} max={props.max} value={text} placeholder="0"
           onChange={(e) => {
-            const n = Number(e.target.value)
-            props.onChange(Number.isFinite(n) ? Math.min(props.max, Math.max(props.min, n)) : 0)
+            const raw = e.target.value.replace(/^0+(?=\d)/, '')
+            const n = Number(raw)
+            const clamped = Number.isFinite(n) ? Math.min(props.max, Math.max(props.min, n)) : 0
+            setText(raw !== '' && clamped !== n ? String(clamped) : raw)
+            props.onChange(raw === '' ? 0 : clamped)
           }} />
       </span>
     </label>
