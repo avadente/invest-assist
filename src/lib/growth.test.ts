@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatMoney, projectGrowth } from './growth'
+import { compareOptions, costOfWaiting, crossoverYear, formatMoney, perDay, projectGrowth, waitYears } from './growth'
 
 describe('projectGrowth', () => {
   it('with 0% return, balance equals what you put in', () => {
@@ -30,5 +30,48 @@ describe('projectGrowth', () => {
 describe('formatMoney', () => {
   it('rounds to whole dollars', () => {
     expect(formatMoney(1234.56)).toBe('$1,235')
+  })
+})
+
+describe('calculator persuasion helpers', () => {
+  const input = { start: 0, monthly: 50, ratePct: 6, years: 30 }
+
+  it('waiting 10 years costs real money', () => {
+    const r = costOfWaiting(input)
+    expect(r.wait).toBe(10)
+    expect(r.now).toBeGreaterThan(r.later)
+    expect(r.lost).toBeCloseTo(r.now - r.later, 6)
+    // Waiting 10 of 30 years loses far more than the 10 years of deposits ($6,000).
+    expect(r.lost).toBeGreaterThan(6000 * 2)
+  })
+
+  it('scales the wait to short plans', () => {
+    expect(waitYears(6)).toBe(2)
+    expect(waitYears(1)).toBe(1)
+  })
+
+  it('finds the year growth passes what you put in', () => {
+    const year = crossoverYear(projectGrowth(input))
+    expect(year).not.toBeNull()
+    const pts = projectGrowth(input)
+    const p = pts[year!]
+    expect(p.balance - p.contributed).toBeGreaterThan(p.contributed)
+    const before = pts[year! - 1]
+    expect(before.balance - before.contributed).toBeLessThanOrEqual(before.contributed)
+  })
+
+  it('returns null when growth never catches up', () => {
+    expect(crossoverYear(projectGrowth({ ...input, years: 5 }))).toBeNull()
+  })
+
+  it('orders cash < savings < invested', () => {
+    const c = compareOptions(input)
+    expect(c.cash).toBe(50 * 12 * 30)
+    expect(c.savings).toBeGreaterThan(c.cash)
+    expect(c.invested).toBeGreaterThan(c.savings)
+  })
+
+  it('turns a monthly amount into a daily one', () => {
+    expect(perDay(50)).toBeCloseTo(1.64, 2)
   })
 })

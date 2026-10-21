@@ -77,7 +77,8 @@ export function Onboarding(props: {
     title = t.experienceQ
     body = experiences.map((e) => (
       <Choice key={e} type="radio" name="experience" checked={d.experience === e}
-        onChange={() => setD({ ...d, experience: e })} label={t.experience[e].label} hint={t.experience[e].hint} />
+        onChange={() => setD({ ...d, experience: e })} onClear={() => setD({ ...d, experience: undefined })}
+        label={t.experience[e].label} hint={t.experience[e].hint} />
     ))
   } else if (step === 1) {
     title = t.goalsQ
@@ -95,12 +96,12 @@ export function Onboarding(props: {
         <div className="chips">
           {budgetPicks.map((b) => (
             <button key={b} type="button" aria-pressed={d.budget === b} className={`chip ${d.budget === b ? 'sel' : ''}`}
-              onClick={() => { setD({ ...d, budget: b }); setOther('') }}>
+              onClick={() => { setD({ ...d, budget: d.budget === b ? undefined : b }); setOther('') }}>
               {formatMoney(b)}{t.perMonth}
             </button>
           ))}
           <button type="button" aria-pressed={d.budget === 'unsure'} className={`chip ${d.budget === 'unsure' ? 'sel' : ''}`}
-            onClick={() => { setD({ ...d, budget: 'unsure' }); setOther('') }}>
+            onClick={() => { setD({ ...d, budget: d.budget === 'unsure' ? undefined : 'unsure' }); setOther('') }}>
             {t.notSure}
           </button>
         </div>
@@ -123,7 +124,8 @@ export function Onboarding(props: {
     title = quiz[qi].q
     body = quiz[qi].options.map((o, oi) => (
       <Choice key={oi} type="radio" name={`q${qi}`} checked={d.quiz[qi] === oi} label={o}
-        onChange={() => setD({ ...d, quiz: d.quiz.map((v, i) => (i === qi ? oi : v)) })} />
+        onChange={() => setD({ ...d, quiz: d.quiz.map((v, i) => (i === qi ? oi : v)) })}
+        onClear={() => setD({ ...d, quiz: d.quiz.map((v, i) => (i === qi ? undefined : v)) })} />
     ))
   }
 
@@ -139,6 +141,7 @@ export function Onboarding(props: {
         <h2 ref={heading} tabIndex={-1} id="onboard-q-title">{title}</h2>
         {hint && <p className="muted">{hint}</p>}
         {body}
+        {step !== 1 && <p className="muted small clear-hint">{t.clearHint}</p>}
       </fieldset>
       <div className="onboard-nav">
         {step > 0
@@ -153,11 +156,14 @@ export function Onboarding(props: {
 }
 
 function Choice(props: {
-  type: 'radio' | 'checkbox'; name: string; checked: boolean; onChange: () => void; label: string; hint?: string
+  type: 'radio' | 'checkbox'; name: string; checked: boolean; onChange: () => void; onClear?: () => void
+  label: string; hint?: string
 }) {
   return (
     <label className={`opt big-opt ${props.checked ? 'sel' : ''}`}>
-      <input type={props.type} name={props.name} checked={props.checked} onChange={props.onChange} />
+      <input type={props.type} name={props.name} checked={props.checked} onChange={props.onChange}
+        // A selected radio button can't normally be unselected; clicking it again clears the answer.
+        onClick={() => { if (props.type === 'radio' && props.checked) props.onClear?.() }} />
       <span>
         <span className="step-label">{props.label}</span>
         {props.hint && <span className="muted small block">{props.hint}</span>}

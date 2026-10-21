@@ -2,7 +2,7 @@ import type { Content } from './types'
 
 export const en: Content = {
   ui: {
-    tagline: 'Investing basics for first-gen students',
+    tagline: 'Investing basics for students.',
     langLabel: 'Language',
     tabs: {
       home: 'My plan',
@@ -33,7 +33,7 @@ export const en: Content = {
     readyTitle: 'Am I ready to invest?',
     readyLead: "Most money experts suggest this order. Check off what you've already done.",
     stepsDone: 'steps done',
-    nextStep: 'Your next step: work toward',
+    nextStep: 'Your next step:',
     allDone: "You've covered the basics. Keep investing automatically and leave it alone. 🎉",
 
     calcTitle: 'Growth calculator',
@@ -51,6 +51,17 @@ export const en: Content = {
     legendIn: 'What you put in',
     legendGrowth: 'Growth',
     chartLabel: (b) => `Chart: balance grows to ${b}`,
+    whyTitle: 'Why start now?',
+    waitCost: (w, later, lost) => `Wait ${w} year${w > 1 ? 's' : ''} to start (and stop at the same time), and you'd end up with about ${later}. That's ${lost} less.`,
+    compareTitle: 'Same money, three choices',
+    cashLabel: 'Cash (no interest)',
+    savingsLabel: 'Savings account (about 1% a year)',
+    investLabel: (r) => `Invested (about ${r}% a year)`,
+    crossover: (y) => `By year ${y}, growth has added more than you put in yourself. Your money is working harder than you are.`,
+    noCrossover: 'Leave it longer: the biggest growth happens in the later years.',
+    perDay: (m, d) => `${m} a month is about ${d} a day.`,
+    multiplier: (x) => `Every $1 you put in grows to about $${x}.`,
+    whyNote: "These use the numbers above and assume a steady average return. Real markets go up and down, so this isn't a guarantee.",
 
     quizBest: 'Good place to start',
     quizNext: 'What to do next:',
@@ -84,6 +95,7 @@ export const en: Content = {
     next: 'Next',
     finish: 'See my plan',
     stepOf: (s, t) => `Question ${s} of ${t}`,
+    clearHint: 'Changed your mind? Tap your answer again to clear it.',
     experienceQ: 'How much do you know about investing?',
     experience: {
       new: { label: "I'm brand new", hint: 'Words like "stock" and "index fund" are new to me.' },
@@ -136,6 +148,30 @@ export const en: Content = {
     answersBudget: 'Monthly budget',
     noGoals: 'None picked',
     editAnswers: 'Edit my answers',
+
+    planTitle: 'Your step-by-step plan',
+    planLead: 'Built from your answers. Check off steps as you go. They stay in sync with "Am I ready?".',
+    stepDone: 'Done',
+    stepNext: 'Next up',
+    learnHow: 'Learn how',
+    stepNotes: {
+      needsIncome: 'You need income from a job or side gig to put money in a Roth IRA. Come back to this when you have some.',
+      longTermOnly: "Only for money you won't need for 5+ years. Keep money you need soon in savings.",
+      startHere: 'Start here. Even $20 a week adds up fast.',
+    },
+    waitLine: (w, lost) => `Starting now instead of waiting ${w} years could mean about ${lost} more.`,
+
+    summaryTitle: 'Your plan at a glance',
+    summaryLead: 'Share it with a friend, family member, or advisor. This preview is exactly what gets shared.',
+    shareHeading: 'My Invest-Assist plan',
+    shareCanInvest: 'I can invest',
+    shareProgress: (d, t) => `${d} of ${t} steps done`,
+    shareCta: 'Make your own free plan:',
+    share: 'Share',
+    download: 'Download image',
+    copy: 'Copy text',
+    copied: 'Copied!',
+    shareFailed: "Couldn't share from this browser. Try Copy text instead.",
   },
 
   lessons: [
@@ -233,14 +269,14 @@ export const en: Content = {
   ],
 
   readySteps: [
-    { id: 'budget', label: 'I know roughly how much comes in and goes out each month', why: 'You can only invest money you will not need for bills.' },
-    { id: 'starter', label: 'I have a starter emergency fund ($500 to $1,000)', why: 'This keeps a surprise bill from becoming credit card debt.' },
-    { id: 'highdebt', label: 'I have no credit card or other debt above about 8% interest', why: 'Paying off high-interest debt is a guaranteed win.' },
-    { id: 'match', label: 'If my job offers a 401(k) match, I contribute enough to get all of it', why: 'A match is often an instant 50% to 100% return.' },
-    { id: 'full', label: 'My emergency fund covers about 3 months of expenses', why: 'This lets you leave investments alone when life gets bumpy.' },
-    { id: 'roth', label: 'I have opened (or am ready to open) a Roth IRA', why: 'Tax-free growth, and early savers benefit the most.' },
-    { id: 'fund', label: 'I picked a low-cost, broad index fund or target-date fund', why: 'Simple, diversified, and cheap. No stock picking needed.' },
-    { id: 'auto', label: 'I set up automatic monthly investing', why: 'Automating it means you never have to remember or time the market.' },
+    { id: 'budget', action: 'Get a rough idea of what comes in and goes out each month', label: 'I know roughly how much comes in and goes out each month', why: 'You can only invest money you will not need for bills.' },
+    { id: 'starter', action: 'Build a starter emergency fund ($500 to $1,000)', label: 'I have a starter emergency fund ($500 to $1,000)', why: 'This keeps a surprise bill from becoming credit card debt.' },
+    { id: 'highdebt', action: 'Pay off credit cards and other debt above about 8% interest', label: 'I have no credit card or other debt above about 8% interest', why: 'Paying off high-interest debt is a guaranteed win.' },
+    { id: 'match', action: 'Contribute enough to your 401(k) to get the full match', label: 'If my job offers a 401(k) match, I contribute enough to get all of it', why: 'A match is often an instant 50% to 100% return.' },
+    { id: 'full', action: 'Grow your emergency fund to about 3 months of expenses', label: 'My emergency fund covers about 3 months of expenses', why: 'This lets you leave investments alone when life gets bumpy.' },
+    { id: 'roth', action: 'Open a Roth IRA', label: 'I have opened (or am ready to open) a Roth IRA', why: 'Tax-free growth, and early savers benefit the most.' },
+    { id: 'fund', action: 'Pick a low-cost, broad index fund or target-date fund', label: 'I picked a low-cost, broad index fund or target-date fund', why: 'Simple, diversified, and cheap. No stock picking needed.' },
+    { id: 'auto', action: 'Set up automatic monthly investing', label: 'I set up automatic monthly investing', why: 'Automating it means you never have to remember or time the market.' },
   ],
 
   redFlags: [

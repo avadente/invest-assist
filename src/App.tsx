@@ -21,10 +21,13 @@ type Route = TabId | 'glossary'
 const legacy: Record<string, Route> = { start: 'learn', jargon: 'glossary', account: 'home' }
 
 const fromHash = (): Route => {
-  const h = window.location.hash.slice(1)
+  const h = window.location.hash.slice(1).split('/')[0]
   if (h === 'glossary' || tabs.some((t) => t.id === h)) return h as Route
   return legacy[h] ?? 'home'
 }
+
+/** "#learn/safety" opens the "safety" lesson. */
+const lessonFromHash = () => window.location.hash.split('/')[1]
 
 const langs: { id: Lang; label: string; name: string }[] = [
   { id: 'en', label: 'EN', name: 'English' },
@@ -35,6 +38,7 @@ export default function App() {
   const { lang, setLang, c } = useLang()
   const ui = c.ui
   const [route, setRoute] = useState<Route>(fromHash)
+  const [lesson, setLesson] = useState(lessonFromHash)
   const [saved, setSaved] = useStored<Profile | null>('ia.profile', null)
   const [skipped, setSkipped] = useStored('ia.onboardingSkipped', false)
   const [editing, setEditing] = useState(false)
@@ -43,6 +47,7 @@ export default function App() {
   useEffect(() => {
     const onHash = () => {
       setRoute(fromHash())
+      setLesson(lessonFromHash())
       setEditing(false)
       window.scrollTo(0, 0)
     }
@@ -69,7 +74,7 @@ export default function App() {
   let page
   if (showOnboarding) page = <Onboarding initial={profile} skipIntro={editing} onDone={done} onSkip={skip} />
   else if (route === 'home') page = <Home profile={profile} onEdit={() => setEditing(true)} />
-  else if (route === 'learn' || route === 'glossary') page = <Learn view={route === 'learn' ? 'lessons' : 'glossary'} />
+  else if (route === 'learn' || route === 'glossary') page = <Learn view={route === 'learn' ? 'lessons' : 'glossary'} lesson={lesson} key={lesson} />
   else if (route === 'ready') page = <Ready />
   else if (route === 'grow') page = <Calculator />
   else page = <Scams />

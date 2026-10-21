@@ -42,3 +42,37 @@ export function projectGrowth({ start, monthly, ratePct, years }: GrowthInput): 
 export function formatMoney(n: number): string {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
 }
+
+const finalBalance = (input: GrowthInput) => {
+  const pts = projectGrowth(input)
+  return pts[pts.length - 1].balance
+}
+
+/** How long a "wait and see" delay is worth comparing for a given plan length. */
+export function waitYears(years: number): number {
+  return years >= 15 ? 10 : Math.max(1, Math.floor(years / 3))
+}
+
+/** What waiting `wait` years to start costs, compared with starting today. */
+export function costOfWaiting(input: GrowthInput, wait = waitYears(input.years)) {
+  const now = finalBalance(input)
+  const later = finalBalance({ ...input, years: Math.max(0, input.years - wait) })
+  return { wait, now, later, lost: Math.max(0, now - later) }
+}
+
+/** First year growth has added more than you put in yourself, or null if it never does. */
+export function crossoverYear(points: YearPoint[]): number | null {
+  const hit = points.find((p) => p.year > 0 && p.balance - p.contributed > p.contributed)
+  return hit ? hit.year : null
+}
+
+/** The same plan in cash (0%), a savings account, and invested. */
+export function compareOptions(input: GrowthInput, savingsRatePct = 1) {
+  return {
+    cash: finalBalance({ ...input, ratePct: 0 }),
+    savings: finalBalance({ ...input, ratePct: savingsRatePct }),
+    invested: finalBalance(input),
+  }
+}
+
+export const perDay = (monthly: number) => (Math.max(0, monthly || 0) * 12) / 365

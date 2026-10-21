@@ -7,6 +7,7 @@ export type TabId = 'home' | 'learn' | 'ready' | 'grow' | 'scams'
 export type Experience = 'new' | 'some' | 'experienced'
 export type Goal = 'safety' | 'shortTerm' | 'retirement' | 'grow' | 'learn'
 export type Nudge = 'safetyFirst' | 'shortTerm' | 'calm'
+export type StepNote = 'needsIncome' | 'longTermOnly' | 'startHere'
 
 export interface Lesson {
   id: string
@@ -24,7 +25,10 @@ export interface Term {
 
 export interface ReadyStep {
   id: string
+  /** First-person checklist wording: "I have…" */
   label: string
+  /** The same step as something to do: "Build…" */
+  action: string
   why: string
 }
 
@@ -77,6 +81,17 @@ export interface Ui {
   legendIn: string
   legendGrowth: string
   chartLabel: (balance: string) => string
+  whyTitle: string
+  waitCost: (wait: number, later: string, lost: string) => string
+  compareTitle: string
+  cashLabel: string
+  savingsLabel: string
+  investLabel: (rate: number) => string
+  crossover: (year: number) => string
+  noCrossover: string
+  perDay: (monthly: string, daily: string) => string
+  multiplier: (x: string) => string
+  whyNote: string
 
   quizBest: string
   quizNext: string
@@ -111,6 +126,7 @@ export interface ProfileText {
   next: string
   finish: string
   stepOf: (step: number, total: number) => string
+  clearHint: string
   experienceQ: string
   experience: Record<Experience, { label: string; hint: string }>
   goalsQ: string
@@ -146,6 +162,28 @@ export interface ProfileText {
   answersBudget: string
   noGoals: string
   editAnswers: string
+
+  // Action plan
+  planTitle: string
+  planLead: string
+  stepDone: string
+  stepNext: string
+  learnHow: string
+  stepNotes: Record<StepNote, string>
+  waitLine: (wait: number, lost: string) => string
+
+  // Share card
+  summaryTitle: string
+  summaryLead: string
+  shareHeading: string
+  shareCanInvest: string
+  shareProgress: (done: number, total: number) => string
+  shareCta: string
+  share: string
+  download: string
+  copy: string
+  copied: string
+  shareFailed: string
 }
 
 export interface Content {
