@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { rankAccounts } from './content'
 import { useLang } from './i18n'
 import { formatMoney, projectGrowth } from './lib/growth'
 import { useStored } from './lib/useStored'
@@ -7,7 +6,7 @@ import { useStored } from './lib/useStored'
 export function StartHere() {
   const { c: { ui, lessons } } = useLang()
   const [done, setDone] = useStored<string[]>('ia.lessons', [])
-  const [open, setOpen] = useState<string | null>(lessons[0].id)
+  const [open, setOpen] = useState<string | null>(() => (lessons.find((l) => !done.includes(l.id)) ?? lessons[0]).id)
 
   const toggleDone = (id: string) =>
     setDone((d) => (d.includes(id) ? d.filter((x) => x !== id) : [...d, id]))
@@ -46,6 +45,23 @@ export function StartHere() {
         })}
       </ol>
     </section>
+  )
+}
+
+export function Learn({ view }: { view: 'lessons' | 'glossary' }) {
+  const { c: { ui } } = useLang()
+  return (
+    <>
+      <nav className="subtabs" aria-label={ui.tabs.learn}>
+        <a href="#learn" className={view === 'lessons' ? 'active' : ''} aria-current={view === 'lessons' ? 'page' : undefined}>
+          📘 {ui.lessonsTab}
+        </a>
+        <a href="#glossary" className={view === 'glossary' ? 'active' : ''} aria-current={view === 'glossary' ? 'page' : undefined}>
+          💬 {ui.glossaryTab}
+        </a>
+      </nav>
+      {view === 'lessons' ? <StartHere /> : <Jargon />}
+    </>
   )
 }
 
@@ -148,43 +164,6 @@ function GrowthChart({ points, label }: { points: { year: number; contributed: n
       <path d={area('contributed')} className="a-in" />
       <path d={line('balance')} className="l-grow" />
     </svg>
-  )
-}
-
-export function WhichAccount() {
-  const { c: { ui, quiz, accountInfo } } = useLang()
-  const [answers, setAnswers] = useState<(number | null)[]>(() => quiz.map(() => null))
-  const complete = answers.every((a) => a !== null)
-
-  const ranked = useMemo(() => rankAccounts(answers), [answers])
-
-  return (
-    <section>
-      <h2>{ui.quizTitle}</h2>
-      <p className="lead">{ui.quizLead}</p>
-      {quiz.map((q, qi) => (
-        <fieldset key={qi} className="card quiz">
-          <legend>{qi + 1}. {q.q}</legend>
-          {q.options.map((o, oi) => (
-            <label key={oi} className={`opt ${answers[qi] === oi ? 'sel' : ''}`}>
-              <input type="radio" name={`q${qi}`} checked={answers[qi] === oi}
-                onChange={() => setAnswers((a) => a.map((v, i) => (i === qi ? oi : v)))} />
-              {o}
-            </label>
-          ))}
-        </fieldset>
-      ))}
-      {complete && (
-        <div className="card callout result-card" aria-live="polite">
-          <div className="muted small">{ui.quizBest}</div>
-          <h3>{accountInfo[ranked[0]].name}</h3>
-          <p>{accountInfo[ranked[0]].summary}</p>
-          <p><strong>{ui.quizNext}</strong> {accountInfo[ranked[0]].next}</p>
-          <p className="muted small">{ui.quizAlso} {accountInfo[ranked[1]].name}.</p>
-          <button className="btn ghost" onClick={() => setAnswers(quiz.map(() => null))}>{ui.startOver}</button>
-        </div>
-      )}
-    </section>
   )
 }
 

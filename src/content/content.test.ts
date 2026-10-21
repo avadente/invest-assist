@@ -12,6 +12,10 @@ describe('English and Spanish stay in sync', () => {
   it('have the same UI keys', () => {
     expect(Object.keys(es.ui).sort()).toEqual(Object.keys(en.ui).sort())
     expect(Object.keys(es.ui.tabs).sort()).toEqual(Object.keys(en.ui.tabs).sort())
+    expect(Object.keys(es.profile).sort()).toEqual(Object.keys(en.profile).sort())
+    for (const k of ['experience', 'goals', 'greeting', 'nudges'] as const) {
+      expect(Object.keys(es.profile[k]).sort()).toEqual(Object.keys(en.profile[k]).sort())
+    }
   })
 
   it('have the same number of red flags, glossary entries and account cards', () => {

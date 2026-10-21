@@ -1,20 +1,29 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 import type { Lang, TabId } from './content'
+import { Home } from './Home'
 import { useLang } from './i18n'
-import { Calculator, Jargon, Ready, Scams, StartHere, WhichAccount } from './sections'
+import { isProfile, type Profile } from './lib/profile'
+import { useStored, writeStored } from './lib/useStored'
+import { Onboarding } from './Onboarding'
+import { Calculator, Learn, Ready, Scams } from './sections'
 
-const tabs: { id: TabId; icon: string; el: ReactNode }[] = [
-  { id: 'start', icon: '📘', el: <StartHere /> },
-  { id: 'ready', icon: '✅', el: <Ready /> },
-  { id: 'grow', icon: '📈', el: <Calculator /> },
-  { id: 'account', icon: '🧭', el: <WhichAccount /> },
-  { id: 'jargon', icon: '💬', el: <Jargon /> },
-  { id: 'scams', icon: '🚩', el: <Scams /> },
+const tabs: { id: TabId; icon: string }[] = [
+  { id: 'home', icon: '🏠' },
+  { id: 'learn', icon: '📘' },
+  { id: 'ready', icon: '✅' },
+  { id: 'grow', icon: '📈' },
+  { id: 'scams', icon: '🚩' },
 ]
 
-const fromHash = (): TabId => {
+type Route = TabId | 'glossary'
+
+/** Old links from before the redesign keep working. */
+const legacy: Record<string, Route> = { start: 'learn', jargon: 'glossary', account: 'home' }
+
+const fromHash = (): Route => {
   const h = window.location.hash.slice(1)
-  return tabs.find((t) => t.id === h)?.id ?? 'start'
+  if (h === 'glossary' || tabs.some((t) => t.id === h)) return h as Route
+  return legacy[h] ?? 'home'
 }
 
 const langs: { id: Lang; label: string; name: string }[] = [
@@ -25,20 +34,50 @@ const langs: { id: Lang; label: string; name: string }[] = [
 export default function App() {
   const { lang, setLang, c } = useLang()
   const ui = c.ui
-  const [tab, setTab] = useState<TabId>(fromHash)
+  const [route, setRoute] = useState<Route>(fromHash)
+  const [saved, setSaved] = useStored<Profile | null>('ia.profile', null)
+  const [skipped, setSkipped] = useStored('ia.onboardingSkipped', false)
+  const [editing, setEditing] = useState(false)
+  const profile = isProfile(saved) ? saved : null
 
   useEffect(() => {
-    const onHash = () => setTab(fromHash())
+    const onHash = () => {
+      setRoute(fromHash())
+      setEditing(false)
+      window.scrollTo(0, 0)
+    }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  const current = tabs.find((t) => t.id === tab)!
+  const showOnboarding = editing || (!profile && !skipped)
+  const tab: TabId = route === 'glossary' ? 'learn' : route
+
+  const done = (p: Profile) => {
+    setSaved(p)
+    setEditing(false)
+    if (p.monthlyBudget) writeStored('ia.calc.monthly', p.monthlyBudget)
+    window.location.hash = 'home'
+    window.scrollTo(0, 0)
+  }
+
+  const skip = () => {
+    setSkipped(true)
+    setEditing(false)
+  }
+
+  let page
+  if (showOnboarding) page = <Onboarding initial={profile} skipIntro={editing} onDone={done} onSkip={skip} />
+  else if (route === 'home') page = <Home profile={profile} onEdit={() => setEditing(true)} />
+  else if (route === 'learn' || route === 'glossary') page = <Learn view={route === 'learn' ? 'lessons' : 'glossary'} />
+  else if (route === 'ready') page = <Ready />
+  else if (route === 'grow') page = <Calculator />
+  else page = <Scams />
 
   return (
     <div className="shell">
       <header className="top">
-        <a href="#start" className="brand">
+        <a href="#home" className="brand">
           <span className="logo" aria-hidden>🌱</span>
           <span>
             <strong>Invest-Assist</strong>
@@ -55,16 +94,18 @@ export default function App() {
         </div>
       </header>
 
-      <nav className="tabs" aria-label="Sections">
-        {tabs.map((t) => (
-          <a key={t.id} href={`#${t.id}`} className={t.id === tab ? 'active' : ''}
-            aria-current={t.id === tab ? 'page' : undefined}>
-            <span aria-hidden>{t.icon}</span> {ui.tabs[t.id]}
-          </a>
-        ))}
-      </nav>
+      {!showOnboarding && (
+        <nav className="tabs" aria-label="Sections">
+          {tabs.map((t) => (
+            <a key={t.id} href={`#${t.id}`} className={t.id === tab ? 'active' : ''}
+              aria-current={t.id === tab ? 'page' : undefined}>
+              <span aria-hidden>{t.icon}</span> {ui.tabs[t.id]}
+            </a>
+          ))}
+        </nav>
+      )}
 
-      <main key={lang}>{current.el}</main>
+      <main>{page}</main>
 
       <footer className="foot muted small">
         <p>
