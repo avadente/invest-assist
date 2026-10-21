@@ -2,7 +2,7 @@ import type { Content } from './types'
 
 export const en: Content = {
   ui: {
-    tagline: 'Investing basics for students.',
+    tagline: 'Investing explained, plain and simple.',
     langLabel: 'Language',
     tabs: {
       home: 'My plan',
@@ -67,7 +67,7 @@ export const en: Content = {
     quizNext: 'What to do next:',
     quizAlso: 'Also worth a look:',
     lessonsTab: 'Lessons',
-    glossaryTab: 'Jargon buster',
+    glossaryTab: 'Investment dictionary',
     mythsTab: 'Myths from home',
     mythsTitle: 'Money myths from home',
     mythsLead: "Things many of us grew up hearing about money. Each one comes from real experience, and here's what's true today, plus a way to talk about it with family.",
@@ -75,8 +75,8 @@ export const en: Content = {
     factLabel: 'What\u2019s true',
     familyLabel: 'Say it at home',
 
-    jargonTitle: 'Jargon buster',
-    jargonLead: 'Money words, explained like a friend would.',
+    jargonTitle: 'Investment dictionary',
+    jargonLead: 'Money words, explained like a friend would. Tap a word to see what it means.',
     searchPlaceholder: 'Search a word… e.g. ETF, Roth, match',
     searchLabel: 'Search terms',
     example: 'Example:',

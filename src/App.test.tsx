@@ -108,7 +108,7 @@ const finishOnboarding = () => {
 describe('My plan', () => {
   it('shows the new tagline', () => {
     renderApp()
-    expect(screen.getByText('Investing basics for students.')).toBeTruthy()
+    expect(screen.getByText('Investing explained, plain and simple.')).toBeTruthy()
   })
 
   it('builds a personalized step plan that syncs with Am I ready?', () => {

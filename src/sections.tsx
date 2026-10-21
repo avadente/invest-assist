@@ -242,15 +242,15 @@ export function Jargon() {
       <p className="lead">{ui.jargonLead}</p>
       <input className="search" type="search" placeholder={ui.searchPlaceholder}
         value={q} onChange={(e) => setQ(e.target.value)} aria-label={ui.searchLabel} />
-      <dl className="glossary">
+      <div className="glossary">
         {list.map((t) => (
-          <div key={t.term} className="card term">
-            <dt>{t.term}</dt>
-            <dd>{t.plain}{t.example && <span className="muted small block">{ui.example} {t.example}</span>}</dd>
-          </div>
+          <details key={t.term} className="card term">
+            <summary>{t.term}</summary>
+            <p>{t.plain}{t.example && <span className="muted small block">{ui.example} {t.example}</span>}</p>
+          </details>
         ))}
         {list.length === 0 && <p className="muted">{ui.noMatches}</p>}
-      </dl>
+      </div>
     </section>
   )
 }

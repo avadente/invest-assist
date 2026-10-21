@@ -2,7 +2,7 @@ import type { Content } from './types'
 
 export const es: Content = {
   ui: {
-    tagline: 'Lo básico de invertir para estudiantes.',
+    tagline: 'Invertir explicado, claro y sencillo.',
     langLabel: 'Idioma',
     tabs: {
       home: 'Mi plan',
@@ -67,7 +67,7 @@ export const es: Content = {
     quizNext: 'Qué hacer ahora:',
     quizAlso: 'También vale la pena ver:',
     lessonsTab: 'Lecciones',
-    glossaryTab: 'Glosario',
+    glossaryTab: 'Diccionario de inversión',
     mythsTab: 'Mitos de casa',
     mythsTitle: 'Mitos sobre el dinero que oímos en casa',
     mythsLead: 'Cosas que muchos escuchamos al crecer. Cada una viene de experiencias reales. Aquí está lo que es cierto hoy y una forma de hablarlo con tu familia.',
@@ -75,8 +75,8 @@ export const es: Content = {
     factLabel: 'Lo que es cierto',
     familyLabel: 'Dilo en casa',
 
-    jargonTitle: 'Glosario sin enredos',
-    jargonLead: 'Palabras de dinero, explicadas como lo haría un amigo.',
+    jargonTitle: 'Diccionario de inversión',
+    jargonLead: 'Palabras de dinero, explicadas como lo haría un amigo. Toca una palabra para ver qué significa.',
     searchPlaceholder: 'Busca una palabra… ej. ETF, Roth, aporte',
     searchLabel: 'Buscar términos',
     example: 'Ejemplo:',
