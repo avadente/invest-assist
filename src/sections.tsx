@@ -1,0 +1,287 @@
+import { useMemo, useState } from 'react'
+import { rankAccounts } from './content'
+import { useLang } from './i18n'
+import { formatMoney, projectGrowth } from './lib/growth'
+import { useStored } from './lib/useStored'
+
+export function StartHere() {
+  const { c: { ui, lessons } } = useLang()
+  const [done, setDone] = useStored<string[]>('ia.lessons', [])
+  const [open, setOpen] = useState<string | null>(lessons[0].id)
+
+  const toggleDone = (id: string) =>
+    setDone((d) => (d.includes(id) ? d.filter((x) => x !== id) : [...d, id]))
+
+  return (
+    <section>
+      <h2>{ui.startTitle}</h2>
+      <p className="lead">{ui.startLead}</p>
+      <Progress value={done.length} max={lessons.length} label={ui.lessonsDone} />
+      <ol className="lessons">
+        {lessons.map((l, i) => {
+          const isOpen = open === l.id
+          const isDone = done.includes(l.id)
+          return (
+            <li key={l.id} className={`card lesson ${isDone ? 'done' : ''}`}>
+              <button
+                className="lesson-head"
+                aria-expanded={isOpen}
+                onClick={() => setOpen(isOpen ? null : l.id)}
+              >
+                <span className="num" aria-hidden>{isDone ? '✓' : i + 1}</span>
+                <span className="lesson-title">{l.title}</span>
+                <span className="muted small">{l.minutes} {ui.min}</span>
+              </button>
+              {isOpen && (
+                <div className="lesson-body">
+                  {l.body.map((p, j) => <p key={j}>{p}</p>)}
+                  <p className="takeaway"><strong>{ui.takeaway}</strong> {l.takeaway}</p>
+                  <button className="btn" onClick={() => toggleDone(l.id)}>
+                    {isDone ? ui.markNotDone : ui.markDone}
+                  </button>
+                </div>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </section>
+  )
+}
+
+export function Ready() {
+  const { c: { ui, readySteps } } = useLang()
+  const [checked, setChecked] = useStored<string[]>('ia.ready', [])
+  const nextStep = readySteps.find((s) => !checked.includes(s.id))
+
+  const toggle = (id: string) =>
+    setChecked((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]))
+
+  return (
+    <section>
+      <h2>{ui.readyTitle}</h2>
+      <p className="lead">{ui.readyLead}</p>
+      <Progress value={checked.length} max={readySteps.length} label={ui.stepsDone} />
+      <div className="card callout">
+        {nextStep ? (
+          <>
+            <strong>{ui.nextStep}</strong> "{nextStep.label}"
+            <div className="muted small">{nextStep.why}</div>
+          </>
+        ) : (
+          <strong>{ui.allDone}</strong>
+        )}
+      </div>
+      <ul className="checklist">
+        {readySteps.map((s, i) => (
+          <li key={s.id} className="card">
+            <label>
+              <input type="checkbox" checked={checked.includes(s.id)} onChange={() => toggle(s.id)} />
+              <span>
+                <span className="step-label">{i + 1}. {s.label}</span>
+                <span className="muted small block">{s.why}</span>
+              </span>
+            </label>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+export function Calculator() {
+  const { c: { ui } } = useLang()
+  const [start, setStart] = useStored('ia.calc.start', 0)
+  const [monthly, setMonthly] = useStored('ia.calc.monthly', 50)
+  const [years, setYears] = useStored('ia.calc.years', 30)
+  const [rate, setRate] = useStored('ia.calc.rate', 6)
+
+  const points = useMemo(
+    () => projectGrowth({ start, monthly, years, ratePct: rate }),
+    [start, monthly, years, rate],
+  )
+  const last = points[points.length - 1]
+  const growth = last.balance - last.contributed
+
+  return (
+    <section>
+      <h2>{ui.calcTitle}</h2>
+      <p className="lead">{ui.calcLead}</p>
+      <div className="calc">
+        <div className="card inputs">
+          <NumberField label={ui.startAmount} prefix="$" value={start} onChange={setStart} min={0} max={1_000_000} />
+          <NumberField label={ui.monthlyAmount} prefix="$" value={monthly} onChange={setMonthly} min={0} max={100_000} />
+          <RangeField label={ui.yearsInvested} value={years} onChange={setYears} min={1} max={50} suffix={ui.yearsSuffix} />
+          <RangeField label={ui.yearlyReturn} value={rate} onChange={setRate} min={0} max={10} step={0.5} suffix="%" />
+          <p className="muted small">{ui.calcNote}</p>
+        </div>
+        <div className="card result">
+          <div className="big">{formatMoney(last.balance)}</div>
+          <p>
+            {ui.afterYears(years)} {ui.youPutIn} <strong>{formatMoney(last.contributed)}</strong>, {ui.growthAdded}{' '}
+            <strong className="accent">{formatMoney(growth)}</strong>.
+          </p>
+          <GrowthChart points={points} label={ui.chartLabel(formatMoney(last.balance))} />
+          <div className="legend">
+            <span><i className="sw sw-in" /> {ui.legendIn}</span>
+            <span><i className="sw sw-grow" /> {ui.legendGrowth}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function GrowthChart({ points, label }: { points: { year: number; contributed: number; balance: number }[]; label: string }) {
+  const W = 600, H = 240, P = 8
+  const max = Math.max(1, ...points.map((p) => p.balance))
+  const n = Math.max(1, points.length - 1)
+  const x = (i: number) => P + (i / n) * (W - 2 * P)
+  const y = (v: number) => H - P - (v / max) * (H - 2 * P)
+  const line = (key: 'balance' | 'contributed') =>
+    points.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ')
+  const area = (key: 'balance' | 'contributed') => `${line(key)} L${x(n)},${H - P} L${x(0)},${H - P} Z`
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="chart" role="img" aria-label={label}>
+      <path d={area('balance')} className="a-grow" />
+      <path d={area('contributed')} className="a-in" />
+      <path d={line('balance')} className="l-grow" />
+    </svg>
+  )
+}
+
+export function WhichAccount() {
+  const { c: { ui, quiz, accountInfo } } = useLang()
+  const [answers, setAnswers] = useState<(number | null)[]>(() => quiz.map(() => null))
+  const complete = answers.every((a) => a !== null)
+
+  const ranked = useMemo(() => rankAccounts(answers), [answers])
+
+  return (
+    <section>
+      <h2>{ui.quizTitle}</h2>
+      <p className="lead">{ui.quizLead}</p>
+      {quiz.map((q, qi) => (
+        <fieldset key={qi} className="card quiz">
+          <legend>{qi + 1}. {q.q}</legend>
+          {q.options.map((o, oi) => (
+            <label key={oi} className={`opt ${answers[qi] === oi ? 'sel' : ''}`}>
+              <input type="radio" name={`q${qi}`} checked={answers[qi] === oi}
+                onChange={() => setAnswers((a) => a.map((v, i) => (i === qi ? oi : v)))} />
+              {o}
+            </label>
+          ))}
+        </fieldset>
+      ))}
+      {complete && (
+        <div className="card callout result-card" aria-live="polite">
+          <div className="muted small">{ui.quizBest}</div>
+          <h3>{accountInfo[ranked[0]].name}</h3>
+          <p>{accountInfo[ranked[0]].summary}</p>
+          <p><strong>{ui.quizNext}</strong> {accountInfo[ranked[0]].next}</p>
+          <p className="muted small">{ui.quizAlso} {accountInfo[ranked[1]].name}.</p>
+          <button className="btn ghost" onClick={() => setAnswers(quiz.map(() => null))}>{ui.startOver}</button>
+        </div>
+      )}
+    </section>
+  )
+}
+
+export function Jargon() {
+  const { c: { ui, glossary } } = useLang()
+  const [q, setQ] = useState('')
+  const list = glossary.filter((t) =>
+    (t.term + ' ' + t.plain).toLowerCase().includes(q.trim().toLowerCase()),
+  )
+  return (
+    <section>
+      <h2>{ui.jargonTitle}</h2>
+      <p className="lead">{ui.jargonLead}</p>
+      <input className="search" type="search" placeholder={ui.searchPlaceholder}
+        value={q} onChange={(e) => setQ(e.target.value)} aria-label={ui.searchLabel} />
+      <dl className="glossary">
+        {list.map((t) => (
+          <div key={t.term} className="card term">
+            <dt>{t.term}</dt>
+            <dd>{t.plain}{t.example && <span className="muted small block">{ui.example} {t.example}</span>}</dd>
+          </div>
+        ))}
+        {list.length === 0 && <p className="muted">{ui.noMatches}</p>}
+      </dl>
+    </section>
+  )
+}
+
+export function Scams() {
+  const { c: { ui, redFlags } } = useLang()
+  const [hits, setHits] = useState<number[]>([])
+  const toggle = (i: number) => setHits((h) => (h.includes(i) ? h.filter((x) => x !== i) : [...h, i]))
+  return (
+    <section>
+      <h2>{ui.scamTitle}</h2>
+      <p className="lead">{ui.scamLead}</p>
+      <ul className="checklist">
+        {redFlags.map((f, i) => (
+          <li key={i} className="card">
+            <label>
+              <input type="checkbox" checked={hits.includes(i)} onChange={() => toggle(i)} />
+              <span>{f}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
+      <div className={`card callout ${hits.length ? 'warn' : ''}`} aria-live="polite">
+        {hits.length === 0 ? (
+          <span>{ui.scamNone}</span>
+        ) : (
+          <span>
+            <strong>{ui.scamHits(hits.length)}</strong> {ui.scamAdvice}{' '}
+            <a href={ui.brokerCheck.href} target="_blank" rel="noreferrer">{ui.brokerCheck.label}</a> ·{' '}
+            <a href={ui.reportFraud.href} target="_blank" rel="noreferrer">{ui.reportFraud.label}</a>
+          </span>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function Progress({ value, max, label }: { value: number; max: number; label: string }) {
+  const { c: { ui } } = useLang()
+  return (
+    <div className="progress">
+      <div className="bar"><div style={{ width: `${(value / max) * 100}%` }} /></div>
+      <span className="muted small">{ui.progress(value, max, label)}</span>
+    </div>
+  )
+}
+
+function NumberField(props: {
+  label: string; value: number; onChange: (n: number) => void; min: number; max: number; prefix?: string
+}) {
+  return (
+    <label className="field">
+      <span>{props.label}</span>
+      <span className="with-prefix">
+        {props.prefix && <span className="prefix">{props.prefix}</span>}
+        <input type="number" inputMode="decimal" min={props.min} max={props.max} value={props.value}
+          onChange={(e) => {
+            const n = Number(e.target.value)
+            props.onChange(Number.isFinite(n) ? Math.min(props.max, Math.max(props.min, n)) : 0)
+          }} />
+      </span>
+    </label>
+  )
+}
+
+function RangeField(props: {
+  label: string; value: number; onChange: (n: number) => void; min: number; max: number; step?: number; suffix?: string
+}) {
+  return (
+    <label className="field">
+      <span>{props.label}: <strong>{props.value}{props.suffix}</strong></span>
+      <input type="range" min={props.min} max={props.max} step={props.step ?? 1} value={props.value}
+        onChange={(e) => props.onChange(Number(e.target.value))} />
+    </label>
+  )
+}
