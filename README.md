@@ -5,11 +5,11 @@ Plain-language investing starter for first-generation college students (Educatio
 **Live:** https://main.d2493a5p56pfp3.amplifyapp.com
 
 ## Sections
-- **Start here**: 5 short lessons with progress saved on the device
-- **Am I ready?**: order-of-operations checklist with a "next step"
-- **Growth calculator**: compound growth with an SVG chart (what you put in vs. growth)
-- **Which account?**: 4-question quiz (HYSA / 401(k) / Roth IRA / brokerage)
-- **Jargon buster**: searchable glossary
+- **Onboarding**: 7 one-at-a-time questions (experience, goals, monthly budget, time horizon, emergency fund, job/401(k) match, comfort with risk). Skippable and editable later
+- **My plan**: suggested first account, next readiness step, what the budget could grow to, next lesson, and gentle nudges (safety net first, short-term money, calm about drops)
+- **Learn**: 5 short lessons + searchable jargon buster
+- **Am I ready?**: order-of-operations checklist
+- **Growth calculator**: compound growth chart, pre-filled with your budget
 - **Scam check**: red-flag self-check with FINRA/FTC links
 - **EN | ES** language toggle (defaults to the browser language)
 

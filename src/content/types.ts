@@ -2,7 +2,11 @@ export type Lang = 'en' | 'es'
 
 export type AccountKey = 'hysa' | 'k401' | 'roth' | 'brokerage'
 
-export type TabId = 'start' | 'ready' | 'grow' | 'account' | 'jargon' | 'scams'
+export type TabId = 'home' | 'learn' | 'ready' | 'grow' | 'scams'
+
+export type Experience = 'new' | 'some' | 'experienced'
+export type Goal = 'safety' | 'shortTerm' | 'retirement' | 'grow' | 'learn'
+export type Nudge = 'safetyFirst' | 'shortTerm' | 'calm'
 
 export interface Lesson {
   id: string
@@ -74,12 +78,11 @@ export interface Ui {
   legendGrowth: string
   chartLabel: (balance: string) => string
 
-  quizTitle: string
-  quizLead: string
   quizBest: string
   quizNext: string
   quizAlso: string
-  startOver: string
+  lessonsTab: string
+  glossaryTab: string
 
   jargonTitle: string
   jargonLead: string
@@ -97,8 +100,57 @@ export interface Ui {
   reportFraud: Link
 }
 
+export interface ProfileText {
+  // Onboarding
+  introTitle: string
+  introLead: string
+  privacyNote: string
+  begin: string
+  skip: string
+  back: string
+  next: string
+  finish: string
+  stepOf: (step: number, total: number) => string
+  experienceQ: string
+  experience: Record<Experience, { label: string; hint: string }>
+  goalsQ: string
+  goalsHint: string
+  goals: Record<Goal, string>
+  budgetQ: string
+  budgetHint: string
+  budgetOther: string
+  notSure: string
+  perMonth: string
+
+  // Home
+  homeTitle: string
+  greeting: Record<Experience, string>
+  getPlanTitle: string
+  getPlanLead: string
+  getPlanCta: string
+  nudges: Record<Nudge, string>
+  accountCard: string
+  nextStepCard: string
+  seeChecklist: string
+  growthCard: string
+  growthLine: (budget: string, years: number, total: string) => string
+  growthNote: (rate: number) => string
+  tryCalc: string
+  lessonCard: string
+  lessonCta: string
+  lessonsAllDone: string
+  experiencedLessons: string
+  answersTitle: string
+  answersExperience: string
+  answersGoals: string
+  answersBudget: string
+  noGoals: string
+  editAnswers: string
+}
+
 export interface Content {
   ui: Ui
+  profile: ProfileText
   lessons: Lesson[]
   glossary: Term[]
   readySteps: ReadyStep[]

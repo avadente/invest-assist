@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react'
 
+/** One-off save outside React, e.g. to pre-fill another screen. */
+export function writeStored(key: string, value: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    // Storage blocked: nothing to pre-fill.
+  }
+}
+
 /** useState that remembers its value on this device. Falls back to memory if storage is blocked. */
 export function useStored<T>(key: string, initial: T) {
   const [value, setValue] = useState<T>(() => {
