@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Search } from './Search'
 import type { Lang, TabId } from './content'
 import { Home } from './Home'
 import { useLang } from './i18n'
@@ -72,7 +73,8 @@ export default function App() {
 
   let page
   if (showOnboarding) page = <Onboarding initial={profile} skipIntro={editing} onDone={done} onSkip={skip} />
-  else if (route === 'home') page = <Home profile={profile} onEdit={() => setEditing(true)} />
+  else if (route === 'home')
+    page = <Home profile={profile} onEdit={() => setEditing(true)} onStartOwn={() => { setSaved(null); setSkipped(false) }} />
   else if (route === 'learn' || route === 'glossary' || route === 'myths')
     page = <Learn view={route === 'learn' ? 'lessons' : route} lesson={lesson} key={lesson} />
   else if (route === 'ready') page = <Ready />
@@ -89,6 +91,7 @@ export default function App() {
             <span className="muted small block">{ui.tagline}</span>
           </span>
         </a>
+        <Search />
         <div className="lang" role="group" aria-label={ui.langLabel}>
           {langs.map((l) => (
             <button key={l.id} lang={l.id} aria-pressed={lang === l.id} title={l.name}
@@ -113,6 +116,11 @@ export default function App() {
       <main>{page}</main>
 
       <footer className="foot muted small">
+        <nav className="foot-nav" aria-label={ui.footerNav}>
+          {tabs.map((t) => <a key={t.id} href={`#${t.id}`}>{ui.tabs[t.id]}</a>)}
+          <a href="#glossary">{ui.glossaryTab}</a>
+          <a href="#myths">{ui.mythsTab}</a>
+        </nav>
         <p>
           <strong>{ui.disclaimerStrong}</strong> {ui.disclaimer}
         </p>

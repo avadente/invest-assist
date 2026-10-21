@@ -24,7 +24,7 @@ const fromProfile = (p?: Profile | null): Draft =>
     : { goals: [], budget: undefined, quiz: [undefined, undefined, undefined, undefined] }
 
 /** A realistic student for live demos: new to investing, part-time job, no emergency fund yet. */
-const SAMPLE: Profile = {
+export const SAMPLE: Profile = {
   experience: 'new', goals: ['safety', 'retirement', 'learn'], monthlyBudget: 25,
   horizon: 2, emergency: 0, job: 1, risk: 0,
 }
