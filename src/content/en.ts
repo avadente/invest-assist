@@ -70,6 +70,8 @@ export const en: Content = {
     searchSite: 'Search lessons, words, myths…',
     searchNone: 'No results',
     searchHint: 'Search…',
+    resetPlan: 'Reset my plan',
+    resetConfirm: 'Clear your answers and checklist and start over?',
     sharePlan: 'Share my plan',
     hideShare: 'Hide preview',
     footerNav: 'All pages',

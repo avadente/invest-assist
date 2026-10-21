@@ -10,7 +10,7 @@ import { Calculator, Learn, Ready, Scams } from './sections'
 
 const tabs: { id: TabId; icon: string }[] = [
   { id: 'home', icon: '🏠' },
-  { id: 'learn', icon: '📘' },
+  { id: 'learn', icon: '🎓' },
   { id: 'ready', icon: '✅' },
   { id: 'grow', icon: '📈' },
   { id: 'scams', icon: '🚩' },
@@ -34,6 +34,8 @@ const langs: { id: Lang; label: string; name: string }[] = [
   { id: 'en', label: 'EN', name: 'English' },
   { id: 'es', label: 'ES', name: 'Español' },
 ]
+
+export const tabIcons = Object.fromEntries(tabs.map((t) => [t.id, t.icon])) as Record<TabId, string>
 
 export default function App() {
   const { lang, setLang, c } = useLang()
@@ -117,9 +119,9 @@ export default function App() {
 
       <footer className="foot muted small">
         <nav className="foot-nav" aria-label={ui.footerNav}>
-          {tabs.map((t) => <a key={t.id} href={`#${t.id}`}>{ui.tabs[t.id]}</a>)}
-          <a href="#glossary">{ui.glossaryTab}</a>
-          <a href="#myths">{ui.mythsTab}</a>
+          {tabs.map((t) => <a key={t.id} href={`#${t.id}`}><span aria-hidden>{t.icon}</span> {ui.tabs[t.id]}</a>)}
+          <a href="#glossary"><span aria-hidden>💬</span> {ui.glossaryTab}</a>
+          <a href="#myths"><span aria-hidden>🏡</span> {ui.mythsTab}</a>
         </nav>
         <p>
           <strong>{ui.disclaimerStrong}</strong> {ui.disclaimer}

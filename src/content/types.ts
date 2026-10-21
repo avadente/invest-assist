@@ -105,6 +105,8 @@ export interface Ui {
   lessonsTab: string
   searchSite: string
   searchHint: string
+  resetPlan: string
+  resetConfirm: string
   sharePlan: string
   hideShare: string
   searchNone: string
