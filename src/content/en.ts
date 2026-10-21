@@ -67,6 +67,8 @@ export const en: Content = {
     quizNext: 'What to do next:',
     quizAlso: 'Also worth a look:',
     lessonsTab: 'Lessons',
+    reset: 'Reset checklist',
+    undo: 'Undo reset',
     glossaryTab: 'Investment dictionary',
     mythsTab: 'Myths from home',
     mythsTitle: 'Money myths from home',

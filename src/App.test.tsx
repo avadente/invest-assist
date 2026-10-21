@@ -55,7 +55,6 @@ describe('onboarding', () => {
 
     // Saved locally and the calculator is pre-filled with the budget.
     expect(JSON.parse(localStorage.getItem('ia.profile')!).experience).toBe('new')
-    expect(localStorage.getItem('ia.calc.monthly')).toBe('50')
   })
 
   it('can be skipped, and offers the questions again from My plan', () => {

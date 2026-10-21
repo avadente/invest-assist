@@ -11,6 +11,7 @@ export const budgetPicks = [10, 25, 50, 100]
 export const DEFAULT_BUDGET = 25
 export const PREVIEW_YEARS = 30
 export const PREVIEW_RATE = 6
+export const SAVINGS_RATE = 1
 
 export interface Profile {
   experience: Experience
@@ -29,7 +30,10 @@ export interface Plan {
   alsoConsider: AccountKey
   nudges: Nudge[]
   budget: number
-  /** What the budget could grow to over PREVIEW_YEARS at PREVIEW_RATE. */
+  /** Projection length and rate follow the person's time horizon. */
+  years: number
+  rate: number
+  /** What the budget could grow to over `years` at `rate`. */
   preview: number
   /** Beginners and cautious people see diversified funds before single stocks. */
   fundsFirst: boolean
@@ -44,13 +48,18 @@ export function buildPlan(p: Profile): Plan {
   if (p.risk === 0) nudges.push('calm')
 
   const budget = p.monthlyBudget && p.monthlyBudget > 0 ? p.monthlyBudget : DEFAULT_BUDGET
-  const pts = projectGrowth({ start: 0, monthly: budget, ratePct: PREVIEW_RATE, years: PREVIEW_YEARS })
+  // Money needed soon belongs in savings, so project it at a savings rate.
+  const years = [2, 5, PREVIEW_YEARS][p.horizon] ?? PREVIEW_YEARS
+  const rate = p.horizon === 2 ? PREVIEW_RATE : SAVINGS_RATE
+  const pts = projectGrowth({ start: 0, monthly: budget, ratePct: rate, years })
 
   return {
     account,
     alsoConsider,
     nudges,
     budget,
+    years,
+    rate,
     preview: pts[pts.length - 1].balance,
     fundsFirst: p.experience === 'new' || p.risk === 0,
   }

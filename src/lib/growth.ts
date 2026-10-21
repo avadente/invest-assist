@@ -39,6 +39,9 @@ export function projectGrowth({ start, monthly, ratePct, years }: GrowthInput): 
   return points
 }
 
+/** Rounded to the nearest $100, for projections that are estimates anyway. */
+export const formatAbout = (n: number) => formatMoney(Math.round(n / 100) * 100)
+
 export function formatMoney(n: number): string {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
 }
