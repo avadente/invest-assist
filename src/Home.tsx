@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useLang } from './i18n'
+import { SAMPLE } from './Onboarding'
 import { buildActionPlan } from './lib/actionPlan'
 import { costOfWaiting, formatAbout, formatMoney } from './lib/growth'
 import { buildPlan, type Profile } from './lib/profile'
 import { cardBlob, shareText, type ShareCard } from './lib/shareCard'
 import { useStored } from './lib/useStored'
 
-export function Home(props: { profile: Profile | null; onEdit: () => void }) {
+export function Home(props: { profile: Profile | null; onEdit: () => void; onStartOwn: () => void }) {
   const { c } = useLang()
   const t = c.profile
   const [readyDone, setReadyDone] = useStored<string[]>('ia.ready', [])
@@ -57,6 +58,12 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
 
   return (
     <section>
+      {JSON.stringify(p) === JSON.stringify(SAMPLE) && (
+        <div className="card callout example-banner" role="status">
+          <span>{c.ui.exampleBanner}</span>
+          <button className="btn" onClick={props.onStartOwn}>{c.ui.startOwn}</button>
+        </div>
+      )}
       <h2>{t.homeTitle}</h2>
       <p className="lead">{t.greeting[p.experience]}</p>
 

@@ -164,3 +164,18 @@ describe('demo + myths', () => {
     expect(screen.getByText('"Investing is just gambling."')).toBeTruthy()
   })
 })
+
+describe('navigation', () => {
+  it('lets people leave the example plan for their own questionnaire', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: /See an example plan/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Start my own plan' }))
+    expect(screen.getByRole('heading', { name: "Let's make this about you" })).toBeTruthy()
+  })
+
+  it('searches across lessons and dictionary terms', () => {
+    renderApp()
+    fireEvent.change(screen.getByRole('searchbox', { name: /Search lessons/ }), { target: { value: 'roth' } })
+    expect(screen.getAllByRole('link', { name: /Roth IRA/ }).length).toBeGreaterThan(0)
+  })
+})
