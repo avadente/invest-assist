@@ -2,7 +2,7 @@ import type { Content } from './types'
 
 export const en: Content = {
   ui: {
-    tagline: 'Investing basics for students.',
+    tagline: 'Investing explained, plain and simple.',
     langLabel: 'Language',
     tabs: {
       home: 'My plan',
@@ -67,10 +67,16 @@ export const en: Content = {
     quizNext: 'What to do next:',
     quizAlso: 'Also worth a look:',
     lessonsTab: 'Lessons',
-    glossaryTab: 'Jargon buster',
+    glossaryTab: 'Investment dictionary',
+    mythsTab: 'Myths from home',
+    mythsTitle: 'Money myths from home',
+    mythsLead: "Things many of us grew up hearing about money. Each one comes from real experience, and here's what's true today, plus a way to talk about it with family.",
+    mythLabel: 'You may have heard',
+    factLabel: 'What\u2019s true',
+    familyLabel: 'Say it at home',
 
-    jargonTitle: 'Jargon buster',
-    jargonLead: 'Money words, explained like a friend would.',
+    jargonTitle: 'Investment dictionary',
+    jargonLead: 'Money words, explained like a friend would. Tap a word to see what it means.',
     searchPlaceholder: 'Search a word… e.g. ETF, Roth, match',
     searchLabel: 'Search terms',
     example: 'Example:',
@@ -90,6 +96,7 @@ export const en: Content = {
     introLead: '7 quick questions so Invest-Assist can point you to the right first steps. It takes about 2 minutes, and there are no wrong answers.',
     privacyNote: "Your answers are saved only in this browser. They're never sent to us or anyone else.",
     begin: "Let's go",
+    tryDemo: 'See an example plan',
     skip: 'Skip for now',
     back: 'Back',
     next: 'Next',
@@ -266,6 +273,39 @@ export const en: Content = {
     { term: 'Beta', plain: 'How much a stock tends to swing compared with the whole market. 1 = moves like the market. Above 1 = bigger swings. Below 1 = calmer.' },
     { term: 'Sector / industry', plain: 'The kind of business a company is in, like technology, health care, or energy. Owning many sectors is part of diversifying.' },
     { term: 'Fractional share', plain: 'A piece of one share. Lets you invest a small dollar amount in any stock, no matter its price.', example: '$10 of a $200 stock = 0.05 shares.' },
+  ],
+
+  myths: [
+    {
+      myth: '"Investing is just gambling."',
+      fact: 'A broad index fund owns small pieces of thousands of real companies that make real profits. Casino games are designed so the house wins on average. Over long periods, the U.S. stock market has grown.',
+      family: '"I\u2019m not betting on one company. I\u2019m owning a little of thousands of businesses for many years."',
+    },
+    {
+      myth: '"Cash at home is safer than a bank."',
+      fact: 'Cash at home can be lost or stolen, and it buys less every year because of inflation. Money in an FDIC-insured bank or NCUA-insured credit union is protected up to $250,000. Some banks and credit unions accept an ITIN or passport instead of a Social Security number.',
+      family: '"The bank account is insured by the U.S. government. If the bank fails, the money is still protected."',
+    },
+    {
+      myth: '"You need a lot of money to start."',
+      fact: 'Many brokerages have no minimum and sell fractional shares, so $5 or $10 is enough to start. Time matters more than the amount.',
+      family: '"I\u2019m starting with $10 a month. Small amounts grow a lot over many years."',
+    },
+    {
+      myth: '"Investing is for rich people, not people like us."',
+      fact: 'Accounts like the Roth IRA and 401(k) were made for regular workers. Young people with low income often get the biggest benefit, because they have the most time and pay little tax now.',
+      family: '"This is how regular workers build savings for later. Starting young is our advantage."',
+    },
+    {
+      myth: '"If the market drops, you lose everything."',
+      fact: 'A drop is only a real loss if you sell. Broad funds own thousands of companies, so they don\u2019t go to zero like one business can. The U.S. market has recovered from every past crash so far, though sometimes it took several years.',
+      family: '"It goes up and down, but I\u2019m leaving it alone for a long time and not selling when it drops."',
+    },
+    {
+      myth: '"Retirement accounts lock your money away until you\u2019re old."',
+      fact: 'With a Roth IRA, you can take out what you put in (not the growth) at any time without tax or penalty. It\u2019s still best to leave it alone so it can grow.',
+      family: '"If there\u2019s a real emergency, the money I put in can come back out."',
+    },
   ],
 
   readySteps: [

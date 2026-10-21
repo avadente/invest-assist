@@ -17,6 +17,12 @@ export interface Lesson {
   takeaway: string
 }
 
+export interface Myth {
+  myth: string
+  fact: string
+  family: string
+}
+
 export interface Term {
   term: string
   plain: string
@@ -98,6 +104,12 @@ export interface Ui {
   quizAlso: string
   lessonsTab: string
   glossaryTab: string
+  mythsTab: string
+  mythsTitle: string
+  mythsLead: string
+  mythLabel: string
+  factLabel: string
+  familyLabel: string
 
   jargonTitle: string
   jargonLead: string
@@ -121,6 +133,7 @@ export interface ProfileText {
   introLead: string
   privacyNote: string
   begin: string
+  tryDemo: string
   skip: string
   back: string
   next: string
@@ -191,6 +204,7 @@ export interface Content {
   profile: ProfileText
   lessons: Lesson[]
   glossary: Term[]
+  myths: Myth[]
   readySteps: ReadyStep[]
   redFlags: string[]
   quiz: QuizQuestion[]

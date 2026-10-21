@@ -23,6 +23,12 @@ const fromProfile = (p?: Profile | null): Draft =>
       }
     : { goals: [], budget: undefined, quiz: [undefined, undefined, undefined, undefined] }
 
+/** A realistic student for live demos: new to investing, part-time job, no emergency fund yet. */
+const SAMPLE: Profile = {
+  experience: 'new', goals: ['safety', 'retirement', 'learn'], monthlyBudget: 25,
+  horizon: 2, emergency: 0, job: 1, risk: 0,
+}
+
 export function Onboarding(props: {
   initial?: Profile | null; skipIntro?: boolean; onDone: (p: Profile) => void; onSkip: () => void
 }) {
@@ -65,6 +71,7 @@ export function Onboarding(props: {
           <button className="btn ghost" onClick={props.onSkip}>{t.skip}</button>
           <button className="btn" onClick={() => setIntro(false)}>{t.begin}</button>
         </div>
+        <button className="btn ghost demo" onClick={() => props.onDone(SAMPLE)}>✨ {t.tryDemo}</button>
       </section>
     )
   }

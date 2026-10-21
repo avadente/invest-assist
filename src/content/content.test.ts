@@ -21,6 +21,7 @@ describe('English and Spanish stay in sync', () => {
   it('have the same number of red flags, glossary entries and account cards', () => {
     expect(es.redFlags).toHaveLength(en.redFlags.length)
     expect(es.glossary).toHaveLength(en.glossary.length)
+    expect(es.myths).toHaveLength(en.myths.length)
     expect(Object.keys(es.accountInfo).sort()).toEqual(Object.keys(en.accountInfo).sort())
   })
 

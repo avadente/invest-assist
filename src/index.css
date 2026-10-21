@@ -144,8 +144,18 @@ h3 { margin: 0.25rem 0; }
 }
 .glossary { margin: 0; display: grid; gap: 0 12px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 760px) { .glossary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.term dt { font-weight: 700; color: var(--brand); }
-.term dd { margin: 4px 0 0; }
+.glossary { align-items: start; }
+.term { padding: 0; }
+.term summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px; min-height: 44px; font-weight: 700; color: var(--brand);
+}
+.term summary::-webkit-details-marker { display: none; }
+.term summary::before {
+  content: '▸'; flex-shrink: 0; width: 1em; color: var(--text); transition: transform 0.15s;
+}
+.term[open] summary::before { transform: rotate(90deg); }
+.term p { margin: 0; padding: 0 16px 14px 42px; }
 
 .foot { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 12px; }
 
@@ -230,3 +240,6 @@ h3 { margin: 0.25rem 0; }
 .bar-save { background: var(--accent); }
 .bar-invest { background: var(--brand); }
 .why-facts { padding-left: 20px; margin: 16px 0 8px; display: grid; gap: 6px; }
+
+.demo { width: 100%; margin-top: 12px; }
+.myth h3 { margin: 2px 0 8px; }

@@ -54,7 +54,7 @@ export function StartHere({ lesson }: { lesson?: string }) {
   )
 }
 
-export function Learn({ view, lesson }: { view: 'lessons' | 'glossary'; lesson?: string }) {
+export function Learn({ view, lesson }: { view: 'lessons' | 'glossary' | 'myths'; lesson?: string }) {
   const { c: { ui } } = useLang()
   return (
     <>
@@ -65,8 +65,11 @@ export function Learn({ view, lesson }: { view: 'lessons' | 'glossary'; lesson?:
         <a href="#glossary" className={view === 'glossary' ? 'active' : ''} aria-current={view === 'glossary' ? 'page' : undefined}>
           💬 {ui.glossaryTab}
         </a>
+        <a href="#myths" className={view === 'myths' ? 'active' : ''} aria-current={view === 'myths' ? 'page' : undefined}>
+          🏡 {ui.mythsTab}
+        </a>
       </nav>
-      {view === 'lessons' ? <StartHere lesson={lesson} /> : <Jargon />}
+      {view === 'lessons' ? <StartHere lesson={lesson} /> : view === 'glossary' ? <Jargon /> : <Myths />}
     </>
   )
 }
@@ -209,6 +212,24 @@ function GrowthChart({ points, label }: { points: { year: number; contributed: n
   )
 }
 
+export function Myths() {
+  const { c: { ui, myths } } = useLang()
+  return (
+    <section>
+      <h2>{ui.mythsTitle}</h2>
+      <p className="lead">{ui.mythsLead}</p>
+      {myths.map((m) => (
+        <article key={m.myth} className="card myth">
+          <div className="muted small">{ui.mythLabel}</div>
+          <h3>{m.myth}</h3>
+          <p><strong>{ui.factLabel}:</strong> {m.fact}</p>
+          <p className="takeaway"><strong>{ui.familyLabel}:</strong> {m.family}</p>
+        </article>
+      ))}
+    </section>
+  )
+}
+
 export function Jargon() {
   const { c: { ui, glossary } } = useLang()
   const [q, setQ] = useState('')
@@ -221,15 +242,15 @@ export function Jargon() {
       <p className="lead">{ui.jargonLead}</p>
       <input className="search" type="search" placeholder={ui.searchPlaceholder}
         value={q} onChange={(e) => setQ(e.target.value)} aria-label={ui.searchLabel} />
-      <dl className="glossary">
+      <div className="glossary">
         {list.map((t) => (
-          <div key={t.term} className="card term">
-            <dt>{t.term}</dt>
-            <dd>{t.plain}{t.example && <span className="muted small block">{ui.example} {t.example}</span>}</dd>
-          </div>
+          <details key={t.term} className="card term">
+            <summary>{t.term}</summary>
+            <p>{t.plain}{t.example && <span className="muted small block">{ui.example} {t.example}</span>}</p>
+          </details>
         ))}
         {list.length === 0 && <p className="muted">{ui.noMatches}</p>}
-      </dl>
+      </div>
     </section>
   )
 }
