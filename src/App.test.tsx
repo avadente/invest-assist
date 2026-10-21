@@ -115,7 +115,7 @@ describe('My plan', () => {
     finishOnboarding()
     // No match at this job, so no match step.
     expect(screen.queryByText(/401\(k\) match, I contribute/)).toBeNull()
-    const step = screen.getByLabelText(/I know roughly how much comes in/)
+    const step = screen.getByLabelText(/Get a rough idea of what comes in/)
     fireEvent.click(step)
     expect(JSON.parse(localStorage.getItem('ia.ready')!)).toEqual(['budget'])
     expect(screen.getAllByText('1 of 7 steps done').length).toBeGreaterThan(0)
@@ -124,6 +124,7 @@ describe('My plan', () => {
   it('shows a shareable summary built from the answers', () => {
     renderApp()
     finishOnboarding()
+    fireEvent.click(screen.getByRole('button', { name: /Share my plan/ }))
     const preview = document.querySelector('.share-preview')!
     expect(preview.textContent).toContain('My Invest-Assist plan')
     expect(preview.textContent).toContain('$25/month')
@@ -153,6 +154,7 @@ describe('demo + myths', () => {
     renderApp()
     fireEvent.click(screen.getByRole('button', { name: /See an example plan/ }))
     expect(screen.getByRole('heading', { name: 'My plan' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: /Share my plan/ }))
     expect(document.querySelector('.share-preview')!.textContent).toContain('$25/month')
   })
 
@@ -177,5 +179,22 @@ describe('navigation', () => {
     renderApp()
     fireEvent.change(screen.getByRole('searchbox', { name: /Search lessons/ }), { target: { value: 'roth' } })
     expect(screen.getAllByRole('link', { name: /Roth IRA/ }).length).toBeGreaterThan(0)
+  })
+
+  it('Am I ready? shows the same personalized step count as My plan', () => {
+    renderApp()
+    finishOnboarding()
+    window.location.hash = 'ready'
+    fireEvent(window, new HashChangeEvent('hashchange'))
+    expect(screen.getByText('0 of 7 steps done')).toBeTruthy()
+    expect(screen.queryByText(/401\(k\) match, I contribute/)).toBeNull()
+  })
+
+  it('hides the top search on the dictionary page', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Skip for now' }))
+    window.location.hash = 'glossary'
+    fireEvent(window, new HashChangeEvent('hashchange'))
+    expect(screen.queryByRole('search')).toBeNull()
   })
 })

@@ -77,7 +77,7 @@ export default function App() {
     page = <Home profile={profile} onEdit={() => setEditing(true)} onStartOwn={() => { setSaved(null); setSkipped(false) }} />
   else if (route === 'learn' || route === 'glossary' || route === 'myths')
     page = <Learn view={route === 'learn' ? 'lessons' : route} lesson={lesson} key={lesson} />
-  else if (route === 'ready') page = <Ready />
+  else if (route === 'ready') page = <Ready profile={profile} />
   else if (route === 'grow') page = <Calculator profile={profile} />
   else page = <Scams />
 
@@ -91,7 +91,7 @@ export default function App() {
             <span className="muted small block">{ui.tagline}</span>
           </span>
         </a>
-        <Search />
+        {route !== 'glossary' && <Search />}
         <div className="lang" role="group" aria-label={ui.langLabel}>
           {langs.map((l) => (
             <button key={l.id} lang={l.id} aria-pressed={lang === l.id} title={l.name}

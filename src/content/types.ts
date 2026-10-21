@@ -104,6 +104,9 @@ export interface Ui {
   quizAlso: string
   lessonsTab: string
   searchSite: string
+  searchHint: string
+  sharePlan: string
+  hideShare: string
   searchNone: string
   footerNav: string
   exampleBanner: string

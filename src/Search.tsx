@@ -23,7 +23,7 @@ export function Search() {
 
   return (
     <div className="site-search" role="search">
-      <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={c.ui.searchSite}
+      <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={c.ui.searchHint}
         aria-label={c.ui.searchSite} onKeyDown={(e) => e.key === 'Escape' && setQ('')} />
       {term.length >= 2 && (
         <ul className="search-results card">

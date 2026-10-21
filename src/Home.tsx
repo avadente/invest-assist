@@ -71,7 +71,6 @@ export function Home(props: { profile: Profile | null; onEdit: () => void; onSta
         <div key={n} className="card callout nudge"><span aria-hidden>💡 </span>{t.nudges[n]}</div>
       ))}
 
-      <SummaryCard card={card} />
 
       <div className="card">
         <h3>{t.planTitle}</h3>
@@ -92,7 +91,7 @@ export function Home(props: { profile: Profile | null; onEdit: () => void; onSta
                   <input type="checkbox" checked={s.status === 'done'} onChange={() => toggle(s.id)} />
                   <span>
                     <span className="step-label">
-                      {i + 1}. {text.label}
+                      {i + 1}. {text.action}
                       {s.status === 'next' && <span className="tag">{t.stepNext}</span>}
                     </span>
                     <span className="muted small block">{text.why}</span>
@@ -124,6 +123,8 @@ export function Home(props: { profile: Profile | null; onEdit: () => void; onSta
           <a href="#grow">{t.tryCalc} →</a>
         </div>
       </div>
+
+      <SummaryCard card={card} />
 
       <details className="card answers">
         <summary>{t.answersTitle}</summary>
@@ -157,8 +158,9 @@ export function ResetBar(props: { canReset: boolean; canUndo: boolean; onReset: 
 }
 
 function SummaryCard({ card }: { card: ShareCard }) {
-  const { c: { profile: t } } = useLang()
+  const { c: { profile: t, ui } } = useLang()
   const [status, setStatus] = useState<string>('')
+  const [open, setOpen] = useState(false)
 
   const copy = async () => {
     try {
@@ -199,9 +201,24 @@ function SummaryCard({ card }: { card: ShareCard }) {
     }
   }
 
+  if (!open) {
+    return (
+      <div className="card summary share-closed">
+        <div>
+          <h3>{t.summaryTitle}</h3>
+          <p className="muted small">{t.summaryLead}</p>
+        </div>
+        <button className="btn" onClick={() => setOpen(true)} aria-expanded={false}>📤 {ui.sharePlan}</button>
+      </div>
+    )
+  }
+
   return (
     <div className="card summary">
-      <div className="muted small">{t.summaryTitle}</div>
+      <div className="share-head">
+        <h3>{t.summaryTitle}</h3>
+        <button className="btn ghost" onClick={() => setOpen(false)} aria-expanded>{ui.hideShare}</button>
+      </div>
       <div className="share-preview">
         <div className="share-brand">🌱 Invest-Assist</div>
         <h3>{card.title}</h3>

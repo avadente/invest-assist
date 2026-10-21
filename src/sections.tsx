@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ResetBar } from './Home'
 import { useLang } from './i18n'
+import { buildActionPlan } from './lib/actionPlan'
 import { buildPlan, type Profile } from './lib/profile'
 import { compareOptions, costOfWaiting, crossoverYear, formatAbout, formatMoney, perDay, projectGrowth } from './lib/growth'
 import { useStored } from './lib/useStored'
@@ -76,10 +77,14 @@ export function Learn({ view, lesson }: { view: 'lessons' | 'glossary' | 'myths'
   )
 }
 
-export function Ready() {
-  const { c: { ui, readySteps } } = useLang()
+export function Ready({ profile }: { profile: Profile | null }) {
+  const { c: { ui, readySteps: allSteps } } = useLang()
   const [checked, setChecked] = useStored<string[]>('ia.ready', [])
   const [last, setLast] = useState<string[] | null>(null)
+  // Same personalized list as My plan, so the step counts always match.
+  const ids = profile ? buildActionPlan(profile, checked).map((s) => s.id) : allSteps.map((s) => s.id)
+  const readySteps = allSteps.filter((s) => ids.includes(s.id))
+  const doneCount = readySteps.filter((s) => checked.includes(s.id)).length
   const nextStep = readySteps.find((s) => !checked.includes(s.id))
 
   const toggle = (id: string) =>
@@ -89,7 +94,7 @@ export function Ready() {
     <section>
       <h2>{ui.readyTitle}</h2>
       <p className="lead">{ui.readyLead}</p>
-      <Progress value={checked.length} max={readySteps.length} label={ui.stepsDone} />
+      <Progress value={doneCount} max={readySteps.length} label={ui.stepsDone} />
       <ResetBar canReset={checked.length > 0} canUndo={!!last}
         onReset={() => { setLast(checked); setChecked([]) }} onUndo={() => { setChecked(last!); setLast(null) }} />
       <div className="card callout">
