@@ -243,3 +243,5 @@ h3 { margin: 0.25rem 0; }
 
 .demo { width: 100%; margin-top: 12px; }
 .myth h3 { margin: 2px 0 8px; }
+
+.reset-bar { display: flex; justify-content: flex-end; margin: 4px 0 10px; }

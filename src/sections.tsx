@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { ResetBar } from './Home'
 import { useLang } from './i18n'
-import { compareOptions, costOfWaiting, crossoverYear, formatMoney, perDay, projectGrowth } from './lib/growth'
+import { buildPlan, type Profile } from './lib/profile'
+import { compareOptions, costOfWaiting, crossoverYear, formatAbout, formatMoney, perDay, projectGrowth } from './lib/growth'
 import { useStored } from './lib/useStored'
 
 export function StartHere({ lesson }: { lesson?: string }) {
@@ -77,6 +79,7 @@ export function Learn({ view, lesson }: { view: 'lessons' | 'glossary' | 'myths'
 export function Ready() {
   const { c: { ui, readySteps } } = useLang()
   const [checked, setChecked] = useStored<string[]>('ia.ready', [])
+  const [last, setLast] = useState<string[] | null>(null)
   const nextStep = readySteps.find((s) => !checked.includes(s.id))
 
   const toggle = (id: string) =>
@@ -87,6 +90,8 @@ export function Ready() {
       <h2>{ui.readyTitle}</h2>
       <p className="lead">{ui.readyLead}</p>
       <Progress value={checked.length} max={readySteps.length} label={ui.stepsDone} />
+      <ResetBar canReset={checked.length > 0} canUndo={!!last}
+        onReset={() => { setLast(checked); setChecked([]) }} onUndo={() => { setChecked(last!); setLast(null) }} />
       <div className="card callout">
         {nextStep ? (
           <>
@@ -114,12 +119,14 @@ export function Ready() {
   )
 }
 
-export function Calculator() {
+export function Calculator({ profile }: { profile: Profile | null }) {
   const { c: { ui } } = useLang()
-  const [start, setStart] = useStored('ia.calc.start', 0)
-  const [monthly, setMonthly] = useStored('ia.calc.monthly', 50)
-  const [years, setYears] = useStored('ia.calc.years', 30)
-  const [rate, setRate] = useStored('ia.calc.rate', 6)
+  // Opens with the same numbers as My plan, so the two always match.
+  const plan = profile ? buildPlan(profile) : null
+  const [start, setStart] = useState(0)
+  const [monthly, setMonthly] = useState(plan?.budget ?? 50)
+  const [years, setYears] = useState(plan?.years ?? 30)
+  const [rate, setRate] = useState(plan?.rate ?? 6)
 
   const points = useMemo(
     () => projectGrowth({ start, monthly, years, ratePct: rate }),
@@ -146,7 +153,7 @@ export function Calculator() {
           <p className="muted small">{ui.calcNote}</p>
         </div>
         <div className="card result">
-          <div className="big">{formatMoney(last.balance)}</div>
+          <div className="big">{formatAbout(last.balance)}</div>
           <p>
             {ui.afterYears(years)} {ui.youPutIn} <strong>{formatMoney(last.contributed)}</strong>, {ui.growthAdded}{' '}
             <strong className="accent">{formatMoney(growth)}</strong>.
@@ -258,11 +265,14 @@ export function Jargon() {
 export function Scams() {
   const { c: { ui, redFlags } } = useLang()
   const [hits, setHits] = useState<number[]>([])
+  const [lastHits, setLastHits] = useState<number[] | null>(null)
   const toggle = (i: number) => setHits((h) => (h.includes(i) ? h.filter((x) => x !== i) : [...h, i]))
   return (
     <section>
       <h2>{ui.scamTitle}</h2>
       <p className="lead">{ui.scamLead}</p>
+      <ResetBar canReset={hits.length > 0} canUndo={!!lastHits}
+        onReset={() => { setLastHits(hits); setHits([]) }} onUndo={() => { setHits(lastHits!); setLastHits(null) }} />
       <ul className="checklist">
         {redFlags.map((f, i) => (
           <li key={i} className="card">

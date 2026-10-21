@@ -3,7 +3,7 @@ import type { Lang, TabId } from './content'
 import { Home } from './Home'
 import { useLang } from './i18n'
 import { isProfile, type Profile } from './lib/profile'
-import { useStored, writeStored } from './lib/useStored'
+import { useStored } from './lib/useStored'
 import { Onboarding } from './Onboarding'
 import { Calculator, Learn, Ready, Scams } from './sections'
 
@@ -61,7 +61,6 @@ export default function App() {
   const done = (p: Profile) => {
     setSaved(p)
     setEditing(false)
-    if (p.monthlyBudget) writeStored('ia.calc.monthly', p.monthlyBudget)
     window.location.hash = 'home'
     window.scrollTo(0, 0)
   }
@@ -77,7 +76,7 @@ export default function App() {
   else if (route === 'learn' || route === 'glossary' || route === 'myths')
     page = <Learn view={route === 'learn' ? 'lessons' : route} lesson={lesson} key={lesson} />
   else if (route === 'ready') page = <Ready />
-  else if (route === 'grow') page = <Calculator />
+  else if (route === 'grow') page = <Calculator profile={profile} />
   else page = <Scams />
 
   return (

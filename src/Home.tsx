@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useLang } from './i18n'
 import { buildActionPlan } from './lib/actionPlan'
-import { costOfWaiting, formatMoney } from './lib/growth'
-import { buildPlan, PREVIEW_RATE, PREVIEW_YEARS, type Profile } from './lib/profile'
+import { costOfWaiting, formatAbout, formatMoney } from './lib/growth'
+import { buildPlan, type Profile } from './lib/profile'
 import { cardBlob, shareText, type ShareCard } from './lib/shareCard'
 import { useStored } from './lib/useStored'
 
@@ -10,6 +10,7 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
   const { c } = useLang()
   const t = c.profile
   const [readyDone, setReadyDone] = useStored<string[]>('ia.ready', [])
+  const [lastSteps, setLastSteps] = useState<string[] | null>(null)
 
   if (!props.profile) {
     return (
@@ -31,7 +32,7 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
   const next = steps.find((s) => s.status === 'next')
   const doneCount = steps.filter((s) => s.status === 'done').length
   const acct = c.accountInfo[plan.account]
-  const wait = costOfWaiting({ start: 0, monthly: plan.budget, ratePct: PREVIEW_RATE, years: PREVIEW_YEARS })
+  const wait = costOfWaiting({ start: 0, monthly: plan.budget, ratePct: plan.rate, years: plan.years })
 
   const toggle = (id: string) =>
     setReadyDone((d) => (d.includes(id) ? d.filter((x) => x !== id) : [...d, id]))
@@ -45,8 +46,8 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
       { label: t.nextStepCard, value: next ? stepText(next.id).action : c.ui.allDone },
     ],
     highlight: {
-      value: formatMoney(plan.preview),
-      caption: t.growthLine(formatMoney(plan.budget), PREVIEW_YEARS, formatMoney(plan.preview)),
+      value: formatAbout(plan.preview),
+      caption: t.growthLine(formatMoney(plan.budget), plan.years, formatAbout(plan.preview)),
     },
     progress: t.shareProgress(doneCount, steps.length),
     cta: t.shareCta,
@@ -72,6 +73,9 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
           <div className="bar"><div style={{ width: `${(doneCount / steps.length) * 100}%` }} /></div>
           <span className="muted small">{t.shareProgress(doneCount, steps.length)}</span>
         </div>
+        <ResetBar canReset={readyDone.length > 0} canUndo={!!lastSteps}
+          onReset={() => { setLastSteps(readyDone); setReadyDone([]) }}
+          onUndo={() => { setReadyDone(lastSteps!); setLastSteps(null) }} />
         <ol className="steps">
           {steps.map((s, i) => {
             const text = stepText(s.id)
@@ -106,10 +110,10 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
 
         <div className="card">
           <div className="muted small">{t.growthCard}</div>
-          <div className="big">{formatMoney(plan.preview)}</div>
-          <p>{t.growthLine(formatMoney(plan.budget), PREVIEW_YEARS, formatMoney(plan.preview))}</p>
-          <p><strong>{t.waitLine(wait.wait, formatMoney(wait.lost))}</strong></p>
-          <p className="muted small">{t.growthNote(PREVIEW_RATE)}</p>
+          <div className="big">{formatAbout(plan.preview)}</div>
+          <p>{t.growthLine(formatMoney(plan.budget), plan.years, formatAbout(plan.preview))}</p>
+          {wait.lost > 0 && <p><strong>{t.waitLine(wait.wait, formatAbout(wait.lost))}</strong></p>}
+          <p className="muted small">{t.growthNote(plan.rate)}</p>
           <a href="#grow">{t.tryCalc} →</a>
         </div>
       </div>
@@ -130,6 +134,18 @@ export function Home(props: { profile: Profile | null; onEdit: () => void }) {
         <button className="btn ghost" onClick={props.onEdit}>{t.editAnswers}</button>
       </details>
     </section>
+  )
+}
+
+export function ResetBar(props: { canReset: boolean; canUndo: boolean; onReset: () => void; onUndo: () => void }) {
+  const { c: { ui } } = useLang()
+  if (!props.canReset && !props.canUndo) return null
+  return (
+    <div className="reset-bar">
+      {props.canUndo
+        ? <button className="btn ghost" onClick={props.onUndo}>↶ {ui.undo}</button>
+        : <button className="btn ghost" onClick={props.onReset}>↺ {ui.reset}</button>}
+    </div>
   )
 }
 

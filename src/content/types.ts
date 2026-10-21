@@ -103,6 +103,8 @@ export interface Ui {
   quizNext: string
   quizAlso: string
   lessonsTab: string
+  reset: string
+  undo: string
   glossaryTab: string
   mythsTab: string
   mythsTitle: string

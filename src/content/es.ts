@@ -67,6 +67,8 @@ export const es: Content = {
     quizNext: 'Qué hacer ahora:',
     quizAlso: 'También vale la pena ver:',
     lessonsTab: 'Lecciones',
+    reset: 'Reiniciar lista',
+    undo: 'Deshacer',
     glossaryTab: 'Diccionario de inversión',
     mythsTab: 'Mitos de casa',
     mythsTitle: 'Mitos sobre el dinero que oímos en casa',
