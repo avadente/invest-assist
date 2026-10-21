@@ -96,7 +96,7 @@ export const en: Content = {
     introLead: '7 quick questions so Invest-Assist can point you to the right first steps. It takes about 2 minutes, and there are no wrong answers.',
     privacyNote: "Your answers are saved only in this browser. They're never sent to us or anyone else.",
     begin: "Let's go",
-    tryDemo: 'Try a sample student',
+    tryDemo: 'See an example plan',
     skip: 'Skip for now',
     back: 'Back',
     next: 'Next',

@@ -152,7 +152,7 @@ describe('Growth calculator', () => {
 describe('demo + myths', () => {
   it('fills a sample plan in one tap', () => {
     renderApp()
-    fireEvent.click(screen.getByRole('button', { name: /Try a sample student/ }))
+    fireEvent.click(screen.getByRole('button', { name: /See an example plan/ }))
     expect(screen.getByRole('heading', { name: 'My plan' })).toBeTruthy()
     expect(document.querySelector('.share-preview')!.textContent).toContain('$25/month')
   })

@@ -96,7 +96,7 @@ export const es: Content = {
     introLead: '7 preguntas rápidas para que Invest-Assist te muestre los primeros pasos correctos. Toma unos 2 minutos y no hay respuestas incorrectas.',
     privacyNote: 'Tus respuestas se guardan solo en este navegador. Nunca nos llegan ni a nosotros ni a nadie más.',
     begin: '¡Vamos!',
-    tryDemo: 'Probar con un estudiante de ejemplo',
+    tryDemo: 'Ver un plan de ejemplo',
     skip: 'Saltar por ahora',
     back: 'Atrás',
     next: 'Siguiente',
