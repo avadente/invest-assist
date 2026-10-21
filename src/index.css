@@ -261,3 +261,17 @@ h3 { margin: 0.25rem 0; }
 .foot-nav { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 12px; }
 .foot-nav a { font-weight: 600; padding: 6px 0; }
 .example-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; border-left-color: var(--accent); }
+
+.subtabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.subtabs a { white-space: nowrap; flex-shrink: 0; }
+@media (max-width: 760px) {
+  .tabs {
+    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent);
+    mask-image: linear-gradient(to right, #000 82%, transparent);
+    padding-right: 40px;
+  }
+}
+.share-closed { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.share-closed h3, .share-head h3 { margin: 0 0 4px; }
+.share-closed p { margin: 0; }
+.share-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
